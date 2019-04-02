@@ -1,4 +1,12 @@
-﻿using System;
+﻿/*
+ * Program:     Assignment 5
+ * Author:      Patrick Klesyk, Ben Lane, Matt Rycraft
+ * Z-ID:        Z1782152        Z1806979  Z1818053 
+ * Description: A small logic game that mimics Soduku.
+ * Due Date:    4/10/2019
+ */
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,6 +27,11 @@ namespace Assign5 {
         }
 
         private void Form1_Load(object sender, EventArgs e) {
+            comboBoxDifficulty.Items.Add("Easy 1");
+            comboBoxDifficulty.Items.Add("Easy 2");
+            comboBoxDifficulty.Items.Add("Easy 3");
+
+
             // Get file paths to each game.
             using (var file = new StreamReader("../../../Resources/directory.txt")) {
 
@@ -30,11 +43,15 @@ namespace Assign5 {
                         while ((gameData = gameFilepath.ReadLine()) != null) {
                             Console.WriteLine(gameData);
                         }
-
+                        
                         Console.WriteLine("\n");
                     }
                 }
             }
+        }
+
+        private void button1_Start(object sender, EventArgs e) {
+            Console.WriteLine(comboBoxDifficulty.SelectedIndex);
         }
     }
 }
