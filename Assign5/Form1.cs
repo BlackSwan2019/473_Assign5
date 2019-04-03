@@ -71,21 +71,57 @@ namespace Assign5 {
                     charNums = gameData.ToCharArray();
 
                     for (int i = 0; i < numColumns; i++) {
-                        gameMatrix[row, i] = (int) Char.GetNumericValue(charNums[i]);
+                        // Convert number character to integer and then insert into the game matrix.
+                        gameMatrix[row, i] = (int)Char.GetNumericValue(charNums[i]);
                     }
 
                     // Move on to next row.
                     row++;
 
-                    if (row == 3)
+                    if (row == numColumns)
                         break;
                 }
 
+                Console.WriteLine("Initial state: ");
+
+                // Print out initial game state.
                 for (int r = 0; r < numColumns; r++) {
                     for (int c = 0; c < numColumns; c++) {
                         Console.Write(gameMatrix[r, c]);
                     }
                 }
+
+                row = 0;
+
+                while ((gameData = gameFile.ReadLine()) != null) {
+                    if (gameData == "\n")
+                        break;
+
+                    // Get a character array of that row's numbers.
+                    charNums = gameData.ToCharArray();
+
+                    for (int i = 0; i < numColumns; i++) {
+                        // Convert number character to integer and then insert into the game matrix.
+                        gameMatrix[row, i] = (int)Char.GetNumericValue(charNums[i]);
+                    }
+
+                    // Move on to next row.
+                    row++;
+
+                    if (row == numColumns)
+                        break;
+                }
+
+                Console.WriteLine("\nFinal state: ");
+
+                // Print out initial game state.
+                for (int r = 0; r < numColumns; r++) {
+                    for (int c = 0; c < numColumns; c++) {
+                        Console.Write(gameMatrix[r, c]);
+                    }
+                }
+
+                row = 0;
 
                 Console.WriteLine("\n");
             }
