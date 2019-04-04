@@ -22,6 +22,8 @@ namespace Assign5 {
         string gameData;
         int numColumns;
 
+        TextBox inputCell = new TextBox();
+
 
         public Form1() {
             InitializeComponent();
@@ -42,9 +44,8 @@ namespace Assign5 {
         }
 
         private void button1_Start(object sender, EventArgs e) {
-            int row = 0, 
+            int row = 0,
                 column = 0;
-
 
             using (var gameFile = new StreamReader("../../../Resources/" + ((KeyValuePair<string, string>)comboBoxDifficulty.SelectedItem).Key)) {
                 gameData = gameFile.ReadLine();
@@ -91,40 +92,51 @@ namespace Assign5 {
                     }
                 }
 
+                // Create the two-dimensional array that will hold game numbers when solved.
+                int[,] gameSolvedMatrix = new int[numColumns, numColumns];
+
                 row = 0;
 
                 while ((gameData = gameFile.ReadLine()) != null) {
-                    if (gameData == "\n")
-                        break;
+                    // If the blank line between matrices is read in, skip processing it.
+                    if (gameData.Length == 0) {
+                        continue;
+                    } 
 
                     // Get a character array of that row's numbers.
                     charNums = gameData.ToCharArray();
 
                     for (int i = 0; i < numColumns; i++) {
                         // Convert number character to integer and then insert into the game matrix.
-                        gameMatrix[row, i] = (int)Char.GetNumericValue(charNums[i]);
+                        gameSolvedMatrix[row, i] = (int)Char.GetNumericValue(charNums[i]);
                     }
-
+                    
                     // Move on to next row.
                     row++;
 
                     if (row == numColumns)
                         break;
                 }
-
+                
                 Console.WriteLine("\nFinal state: ");
 
                 // Print out initial game state.
                 for (int r = 0; r < numColumns; r++) {
                     for (int c = 0; c < numColumns; c++) {
-                        Console.Write(gameMatrix[r, c]);
+                        Console.Write(gameSolvedMatrix[r, c]);
                     }
                 }
 
                 row = 0;
-
+                
                 Console.WriteLine("\n");
+
+                drawGame();
             }
+        }
+
+        private void drawGame() {
+            this.inputCell.Location = new System.Drawing.Point(450, 250);
         }
     }
 }
