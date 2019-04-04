@@ -22,9 +22,7 @@ namespace Assign5 {
         string gameData;
         int numColumns;
 
-        TextBox inputCell = new TextBox();
-        
-
+        int[,] gameMatrix;
 
         public Form1() {
             InitializeComponent();
@@ -58,7 +56,7 @@ namespace Assign5 {
                 char[] charNums = gameData.ToCharArray();
 
                 // Create the two-dimensional array that will hold game numbers.
-                int[,] gameMatrix = new int[numColumns, numColumns];
+                gameMatrix = new int[numColumns, numColumns];
 
                 // Fill in the first row of the matrix with numbers.
                 for (int i = 0; i < numColumns; i++) {
@@ -141,30 +139,40 @@ namespace Assign5 {
 
             int x = 200;
             int y = 30;
+
+            int row = 0;
+            int col = 0;
             
             for (int i = 0; i < numColumns * numColumns; i++) {
-                if (i % numColumns == 0)
-                {
+                Console.WriteLine("ROW: " + row);
+                // If we drew out the amount of columns we need, drop to new row.
+                if (i % numColumns == 0 && i > 0) {
                     y += 40;
                     x = 200;
+                    row++;
+                    col = 0;
                 }
 
                 textBoxes[i] = new TextBox();
 
+                // Set properties of the textBox.
                 textBoxes[i].Multiline = true;
                 textBoxes[i].Font = new Font(textBoxes[i].Font.FontFamily, 30);
                 textBoxes[i].Location = new System.Drawing.Point(x, y);
-                textBoxes[i].Height = 40;
-                textBoxes[i].Width = 40;
+                textBoxes[i].Height = 45;
+                textBoxes[i].Width = 45;
+                textBoxes[i].MaxLength = 2;
+                textBoxes[i].Text = gameMatrix[row, col].ToString();
 
+                // Add textBox to the form.
                 Controls.Add(textBoxes[i]);
 
-                
-
+                // Shift right for next textBox placement.
                 x += 40;
+
+                // Go to next column.
+                col++;
             }
-
-
         }
     }
 }
