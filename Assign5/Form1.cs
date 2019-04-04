@@ -23,6 +23,7 @@ namespace Assign5 {
         int numColumns;
 
         TextBox inputCell = new TextBox();
+        
 
 
         public Form1() {
@@ -136,7 +137,21 @@ namespace Assign5 {
         }
 
         private void drawGame() {
-            this.inputCell.Location = new System.Drawing.Point(450, 250);
+            int x = 250;
+            int y = 250;
+
+            for (int i = 0; i < numColumns * numColumns; i++) {
+                this.inputCell.Multiline = true;
+                this.inputCell.Font = new Font(inputCell.Font.FontFamily, 30);
+                this.inputCell.Location = new System.Drawing.Point(x, y);
+                this.inputCell.Height = 80;
+                this.inputCell.Height = 40;
+
+                x += 10;
+            }
+
+            Controls.Add(inputCell);
+
         }
     }
 }
