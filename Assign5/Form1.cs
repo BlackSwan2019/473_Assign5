@@ -35,6 +35,12 @@ namespace Assign5 {
             difficultyOptions.Add("easy/e1.txt", "Easy 1");
             difficultyOptions.Add("easy/e2.txt", "Easy 2");
             difficultyOptions.Add("easy/e3.txt", "Easy 3");
+            difficultyOptions.Add("medium/m1.txt", "Medium 1");
+            difficultyOptions.Add("medium/m2.txt", "Medium 2");
+            difficultyOptions.Add("medium/m3.txt", "Medium 3");
+            difficultyOptions.Add("hard/h1.txt", "Hard 1");
+            difficultyOptions.Add("hard/h2.txt", "Hard 2");
+            difficultyOptions.Add("hard/h3.txt", "Hard 3");
 
             // Set the dropdown menu to use the data source.
             comboBoxDifficulty.DataSource = new BindingSource(difficultyOptions, null);
@@ -161,8 +167,15 @@ namespace Assign5 {
                 textBoxes[i].Location = new System.Drawing.Point(x, y);
                 textBoxes[i].Height = 45;
                 textBoxes[i].Width = 45;
+                textBoxes[i].TextAlign = HorizontalAlignment.Center;
                 textBoxes[i].MaxLength = 2;
-                textBoxes[i].Text = gameMatrix[row, col].ToString();
+
+                if (gameMatrix[row, col] == 0) {
+                    textBoxes[i].Text = "";
+
+                } else {
+                    textBoxes[i].Text = gameMatrix[row, col].ToString();
+                }
 
                 // Add textBox to the form.
                 Controls.Add(textBoxes[i]);
