@@ -137,20 +137,33 @@ namespace Assign5 {
         }
 
         private void drawGame() {
-            int x = 250;
-            int y = 250;
+            TextBox[] textBoxes = new TextBox[numColumns * numColumns];
 
+            int x = 200;
+            int y = 30;
+            
             for (int i = 0; i < numColumns * numColumns; i++) {
-                this.inputCell.Multiline = true;
-                this.inputCell.Font = new Font(inputCell.Font.FontFamily, 30);
-                this.inputCell.Location = new System.Drawing.Point(x, y);
-                this.inputCell.Height = 80;
-                this.inputCell.Height = 40;
+                if (i % numColumns == 0)
+                {
+                    y += 40;
+                    x = 200;
+                }
 
-                x += 10;
+                textBoxes[i] = new TextBox();
+
+                textBoxes[i].Multiline = true;
+                textBoxes[i].Font = new Font(textBoxes[i].Font.FontFamily, 30);
+                textBoxes[i].Location = new System.Drawing.Point(x, y);
+                textBoxes[i].Height = 40;
+                textBoxes[i].Width = 40;
+
+                Controls.Add(textBoxes[i]);
+
+                
+
+                x += 40;
             }
 
-            Controls.Add(inputCell);
 
         }
     }
