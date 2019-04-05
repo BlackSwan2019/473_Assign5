@@ -25,7 +25,7 @@ namespace Assign5 {
 
         Dictionary<string, string> difficultyOptions = new Dictionary<string, string>();    // Holds game difficulty options for Difficulty dropdown menu.
 
-        TextBox[] textBoxes;
+        GameCell[] textBoxes;
         [DllImport("user32.dll")]
         static extern bool HideCaret(System.IntPtr hWnd);
 
@@ -138,7 +138,7 @@ namespace Assign5 {
         }
 
         private void drawGame() {
-            textBoxes = new TextBox[numColumns * numColumns];
+            textBoxes = new GameCell[numColumns * numColumns];
 
             int x = 300;
             int y = 60;
@@ -156,7 +156,7 @@ namespace Assign5 {
                     col = 0;
                 }
 
-                textBoxes[i] = new TextBox();
+                textBoxes[i] = new GameCell();
 
                 // Set properties of the textBox.
                 textBoxes[i].Multiline = true;
@@ -174,16 +174,6 @@ namespace Assign5 {
                 textBoxes[i].SelectionStart = 0;
                 textBoxes[i].SelectionLength = textBoxes[i].Text.Length;
 
-                // Attach event handlers to textBox for when user clicks on textBox or leaves textBox (by clicking on another textBox).
-                textBoxes[i].Enter += textBox_Selected;
-                textBoxes[i].Leave += textBox_Deselected;
-
-                //textBoxes[i].GotFocus += divertFocus;
-
-                //HideCaret(textBoxes[i]);
-
-                //textBoxes[i].GotFocus += HideCaret(textBoxes[i].Handle);
-
                 // Adjust cell dimensions according to how large the matrix is.
                 textBoxes[i].Height = 385 / numColumns;
                 textBoxes[i].Width = 385 / numColumns;
@@ -195,6 +185,11 @@ namespace Assign5 {
                 } else {
                     textBoxes[i].Text = gameMatrix[row, col].ToString();
                     textBoxes[i].ReadOnly = true;
+                    textBoxes[i].Enabled = false;
+
+                    // If cell is disabled, don't use that "disabled look". Maintain a solid border.
+                    textBoxes[i].BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+                    textBoxes[i].BackColor = Color.FromArgb(230, 230, 230);
                 }
 
                 // Add textBox to the form.
@@ -247,23 +242,49 @@ namespace Assign5 {
             comboBoxDifficulty.ValueMember = "Key";
         }
 
-        void textBox_Selected(object sender, EventArgs e) {
-            Control control = sender as Control;
-            control.BackColor = Color.FromArgb(120, 200, 255);
-        }
-
-        void textBox_Deselected(object sender, EventArgs e) {
-            Control control = sender as Control;
-            // Reset color?
-            control.BackColor = Color.FromArgb(255, 255, 255);
-        }
-
         public void HideCaret(TextBox textbox) {
             HideCaret(textbox.Handle);
         }
 
         public void divertFocus(object sender, EventArgs e) {
             comboBoxDifficulty.Focus();
+        }
+    }
+
+    public class GameCell : TextBox {
+        [DllImport("user32.dll")]
+        static extern bool HideCaret(IntPtr hWnd);
+
+        public GameCell() {
+            this.BackColor = Color.White;
+            this.GotFocus += textBox_Selected;
+            this.Leave += textBox_Deselected;
+            this.KeyPress += textBox_KeyPress;
+        }
+
+        private void TextBoxGotFocus(object sender, EventArgs args) {
+            HideCaret(this.Handle);
+        }
+
+        void textBox_Selected(object sender, EventArgs e) {
+            Control control = sender as Control;
+            control.BackColor = Color.FromArgb(120, 200, 255);
+
+            HideCaret(this.Handle);
+        }
+
+        void textBox_Deselected(object sender, EventArgs e) {
+            Control control = sender as Control;
+
+            // Reset color
+            control.BackColor = Color.FromArgb(255, 255, 255);
+        }
+
+        private void textBox_KeyPress(object sender, KeyPressEventArgs e) {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
+                (e.KeyChar != '.')) {
+                e.Handled = true;
+            }
         }
     }
 }

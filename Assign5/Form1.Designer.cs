@@ -25,7 +25,7 @@
         private void InitializeComponent() {
             this.comboBoxDifficulty = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonStart = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.radioButtonHard = new System.Windows.Forms.RadioButton();
             this.radioButtonMedium = new System.Windows.Forms.RadioButton();
@@ -51,15 +51,15 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Game";
             // 
-            // button1
+            // buttonStart
             // 
-            this.button1.Location = new System.Drawing.Point(12, 160);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Start!";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Start);
+            this.buttonStart.Location = new System.Drawing.Point(12, 160);
+            this.buttonStart.Name = "buttonStart";
+            this.buttonStart.Size = new System.Drawing.Size(75, 23);
+            this.buttonStart.TabIndex = 2;
+            this.buttonStart.Text = "Start!";
+            this.buttonStart.UseVisualStyleBackColor = true;
+            this.buttonStart.Click += new System.EventHandler(this.button1_Start);
             // 
             // groupBox1
             // 
@@ -120,7 +120,7 @@
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(760, 499);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.buttonStart);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBoxDifficulty);
             this.Name = "Form1";
@@ -137,7 +137,7 @@
 
         private System.Windows.Forms.ComboBox comboBoxDifficulty;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonStart;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton radioButtonHard;
         private System.Windows.Forms.RadioButton radioButtonMedium;
