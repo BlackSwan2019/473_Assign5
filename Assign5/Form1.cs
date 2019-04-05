@@ -193,6 +193,8 @@ namespace Assign5 {
                     textBoxes[i].BackColor = Color.FromArgb(230, 230, 230);
                 }
 
+                textBoxes[i].TextChanged += valueChanged;
+
                 // Add textBox to the form.
                 Controls.Add(textBoxes[i]);
 
@@ -253,6 +255,23 @@ namespace Assign5 {
         public void divertFocus(object sender, EventArgs e) {
             comboBoxGame.Focus();
         }
+
+        /*  
+        *  Method:     valueChanged
+        *  
+        *  Purpose:    Handles when a user enters a value in a cell. When cell value changes, this will update
+        *              row/column/diagonal sums. 
+        * 
+        *  Arguments:  object          UI component sending event.
+        *              EventArgs       The event.
+        *              
+        *  Return:     void
+        */
+        void valueChanged(object sender, EventArgs e) {
+            var cell = sender as GameCell;
+
+            Console.WriteLine("Which cell: " + cell);
+        }
     }
 
     public class GameCell : TextBox {
@@ -289,6 +308,6 @@ namespace Assign5 {
             if (!(((Char.IsDigit(e.KeyChar) || (e.KeyChar == (char)Keys.Back)) && (e.KeyChar != '0'))))
                 // If the key pressed was not a number within 1-9, then Handle it (meaning DON'T LET PROCESSING GO FURTHER).
                 e.Handled = true;
-        }
+        }     
     }
 }
