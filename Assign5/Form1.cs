@@ -22,6 +22,10 @@ namespace Assign5 {
         string gameData;
         int numColumns;
 
+        Dictionary<string, string> difficultyOptions = new Dictionary<string, string>();    // Holds game difficulty options for Difficulty dropdown menu.
+        TextBox[] textBoxes;
+
+
         int[,] gameMatrix;
 
         public Form1() {
@@ -29,28 +33,18 @@ namespace Assign5 {
         }
 
         private void Form1_Load(object sender, EventArgs e) {
-            Dictionary<string, string> difficultyOptions = new Dictionary<string, string>();    // Holds game difficulty options for Difficulty dropdown menu.
 
-            // Add options to the Difficulty dropdown menu data source.
-            difficultyOptions.Add("easy/e1.txt", "Easy 1");
-            difficultyOptions.Add("easy/e2.txt", "Easy 2");
-            difficultyOptions.Add("easy/e3.txt", "Easy 3");
-            difficultyOptions.Add("medium/m1.txt", "Medium 1");
-            difficultyOptions.Add("medium/m2.txt", "Medium 2");
-            difficultyOptions.Add("medium/m3.txt", "Medium 3");
-            difficultyOptions.Add("hard/h1.txt", "Hard 1");
-            difficultyOptions.Add("hard/h2.txt", "Hard 2");
-            difficultyOptions.Add("hard/h3.txt", "Hard 3");
-
-            // Set the dropdown menu to use the data source.
-            comboBoxDifficulty.DataSource = new BindingSource(difficultyOptions, null);
-            comboBoxDifficulty.DisplayMember = "Value";
-            comboBoxDifficulty.ValueMember = "Key";
         }
 
         private void button1_Start(object sender, EventArgs e) {
-            int row = 0,
-                column = 0;
+            int row = 0;
+
+            // If there is a field from last session, remove it bofore seeting up new game.
+            if (textBoxes != null) {
+                for (int i = 0; i < numColumns * numColumns; i++) {
+                    Controls.Remove(textBoxes[i]);
+                }
+            }
 
             using (var gameFile = new StreamReader("../../../Resources/" + ((KeyValuePair<string, string>)comboBoxDifficulty.SelectedItem).Key)) {
                 gameData = gameFile.ReadLine();
@@ -136,12 +130,16 @@ namespace Assign5 {
                 
                 Console.WriteLine("\n");
 
+                
+
                 drawGame();
             }
         }
 
         private void drawGame() {
-            TextBox[] textBoxes = new TextBox[numColumns * numColumns];
+            
+
+            textBoxes = new TextBox[numColumns * numColumns];
 
             int x = 200;
             int y = 30;
@@ -150,10 +148,11 @@ namespace Assign5 {
             int col = 0;
             
             for (int i = 0; i < numColumns * numColumns; i++) {
-                Console.WriteLine("ROW: " + row);
+                //System.Threading.Thread.Sleep(15);
+
                 // If we drew out the amount of columns we need, drop to new row.
                 if (i % numColumns == 0 && i > 0) {
-                    y += 40;
+                    y += 50;
                     x = 200;
                     row++;
                     col = 0;
@@ -165,10 +164,12 @@ namespace Assign5 {
                 textBoxes[i].Multiline = true;
                 textBoxes[i].Font = new Font(textBoxes[i].Font.FontFamily, 30);
                 textBoxes[i].Location = new System.Drawing.Point(x, y);
-                textBoxes[i].Height = 45;
-                textBoxes[i].Width = 45;
+                textBoxes[i].SelectionStart = 0;
+                textBoxes[i].SelectionLength = textBoxes[i].Text.Length;
+                textBoxes[i].Height = 55;
+                textBoxes[i].Width = 55;
                 textBoxes[i].TextAlign = HorizontalAlignment.Center;
-                textBoxes[i].MaxLength = 2;
+                textBoxes[i].MaxLength = 1;
 
                 if (gameMatrix[row, col] == 0) {
                     textBoxes[i].Text = "";
@@ -181,11 +182,52 @@ namespace Assign5 {
                 Controls.Add(textBoxes[i]);
 
                 // Shift right for next textBox placement.
-                x += 40;
+                x += 50;
 
                 // Go to next column.
                 col++;
             }
+
+            
+        }
+
+        private void radioButtonEasy_CheckedChanged(object sender, EventArgs e) {
+            difficultyOptions.Clear();
+
+            difficultyOptions.Add("easy/e1.txt", "Easy 1");
+            difficultyOptions.Add("easy/e2.txt", "Easy 2");
+            difficultyOptions.Add("easy/e3.txt", "Easy 3");
+
+            // Set the dropdown menu to use the data source.
+            comboBoxDifficulty.DataSource = new BindingSource(difficultyOptions, null);
+            comboBoxDifficulty.DisplayMember = "Value";
+            comboBoxDifficulty.ValueMember = "Key";
+        }
+
+        private void radioButtonMedium_CheckedChanged(object sender, EventArgs e) {
+            difficultyOptions.Clear();
+
+            difficultyOptions.Add("medium/m1.txt", "Medium 1");
+            difficultyOptions.Add("medium/m2.txt", "Medium 2");
+            difficultyOptions.Add("medium/m3.txt", "Medium 3");
+
+            // Set the dropdown menu to use the data source.
+            comboBoxDifficulty.DataSource = new BindingSource(difficultyOptions, null);
+            comboBoxDifficulty.DisplayMember = "Value";
+            comboBoxDifficulty.ValueMember = "Key";
+        }
+
+        private void radioButtonHard_CheckedChanged(object sender, EventArgs e) {
+            difficultyOptions.Clear();
+
+            difficultyOptions.Add("hard/h1.txt", "Hard 1");
+            difficultyOptions.Add("hard/h2.txt", "Hard 2");
+            difficultyOptions.Add("hard/h3.txt", "Hard 3");
+
+            // Set the dropdown menu to use the data source.
+            comboBoxDifficulty.DataSource = new BindingSource(difficultyOptions, null);
+            comboBoxDifficulty.DisplayMember = "Value";
+            comboBoxDifficulty.ValueMember = "Key";
         }
     }
 }
