@@ -26,6 +26,7 @@ namespace Assign5 {
         Dictionary<string, string> difficultyOptions = new Dictionary<string, string>();    // Holds game difficulty options for Difficulty dropdown menu.
 
         GameCell[] textBoxes;
+        Label[] sums;
         [DllImport("user32.dll")]
         static extern bool HideCaret(System.IntPtr hWnd);
 
@@ -136,9 +137,28 @@ namespace Assign5 {
                 drawGame();
             }
         }
-
+        
         private void drawGame() {
             textBoxes = new GameCell[numColumns * numColumns];
+            sums = new Label[numColumns * 2];
+
+            int topSumsX = 300;
+            int topSumsY = 30;
+
+            // Draw sum labels across the top of the play field.
+            for (int i = 0; i < numColumns; i++) {
+                Console.WriteLine("LOOP");
+                sums[i] = new Label();
+
+                sums[i].Text = "00";
+                sums[i].ForeColor = Color.White;
+
+                sums[i].Location = new Point(topSumsX, topSumsY);
+
+                Controls.Add(sums[i]);
+                
+                topSumsX += 30;
+            }
 
             int x = 300;
             int y = 60;
@@ -173,7 +193,7 @@ namespace Assign5 {
                 textBoxes[i].Location = new System.Drawing.Point(x, y);
                 textBoxes[i].SelectionStart = 0;
                 textBoxes[i].SelectionLength = textBoxes[i].Text.Length;
-                textBoxes[i].Cursor = System.Windows.Forms.Cursors.Default;
+                textBoxes[i].Cursor = Cursors.Default;
 
                 // Adjust cell dimensions according to how large the matrix is.
                 textBoxes[i].Height = 385 / numColumns;
@@ -189,7 +209,7 @@ namespace Assign5 {
                     textBoxes[i].Enabled = false;
 
                     // If cell is disabled, don't use that "disabled look". Maintain a solid border.
-                    textBoxes[i].BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+                    textBoxes[i].BorderStyle = BorderStyle.FixedSingle;
                     textBoxes[i].BackColor = Color.FromArgb(230, 230, 230);
                 }
 
@@ -305,9 +325,10 @@ namespace Assign5 {
 
         private void textBox_KeyPress(object sender, KeyPressEventArgs e) {
             // Allow textBox to only accept numbers 1-9.
-            if (!(((Char.IsDigit(e.KeyChar) || (e.KeyChar == (char)Keys.Back)) && (e.KeyChar != '0'))))
+            if (!(((Char.IsDigit(e.KeyChar) || (e.KeyChar == (char)Keys.Back)) && (e.KeyChar != '0')))) {
                 // If the key pressed was not a number within 1-9, then Handle it (meaning DON'T LET PROCESSING GO FURTHER).
                 e.Handled = true;
+            }
         }     
     }
 }
