@@ -49,7 +49,7 @@ namespace Assign5 {
                 }
             }
 
-            using (var gameFile = new StreamReader("../../../Resources/" + ((KeyValuePair<string, string>)comboBoxDifficulty.SelectedItem).Key)) {
+            using (var gameFile = new StreamReader("../../../Resources/" + ((KeyValuePair<string, string>)comboBoxGame.SelectedItem).Key)) {
                 gameData = gameFile.ReadLine();
 
                 // Read a row of numbers from the file and count how many numbers there are. That's how many columns and rows the game will have.
@@ -173,6 +173,7 @@ namespace Assign5 {
                 textBoxes[i].Location = new System.Drawing.Point(x, y);
                 textBoxes[i].SelectionStart = 0;
                 textBoxes[i].SelectionLength = textBoxes[i].Text.Length;
+                textBoxes[i].Cursor = System.Windows.Forms.Cursors.Default;
 
                 // Adjust cell dimensions according to how large the matrix is.
                 textBoxes[i].Height = 385 / numColumns;
@@ -205,41 +206,44 @@ namespace Assign5 {
 
         private void radioButtonEasy_CheckedChanged(object sender, EventArgs e) {
             difficultyOptions.Clear();
+            comboBoxGame.Enabled = true;
 
             difficultyOptions.Add("easy/e1.txt", "Easy 1");
             difficultyOptions.Add("easy/e2.txt", "Easy 2");
             difficultyOptions.Add("easy/e3.txt", "Easy 3");
 
             // Set the dropdown menu to use the data source.
-            comboBoxDifficulty.DataSource = new BindingSource(difficultyOptions, null);
-            comboBoxDifficulty.DisplayMember = "Value";
-            comboBoxDifficulty.ValueMember = "Key";
+            comboBoxGame.DataSource = new BindingSource(difficultyOptions, null);
+            comboBoxGame.DisplayMember = "Value";
+            comboBoxGame.ValueMember = "Key";
         }
 
         private void radioButtonMedium_CheckedChanged(object sender, EventArgs e) {
             difficultyOptions.Clear();
+            comboBoxGame.Enabled = true;
 
             difficultyOptions.Add("medium/m1.txt", "Medium 1");
             difficultyOptions.Add("medium/m2.txt", "Medium 2");
             difficultyOptions.Add("medium/m3.txt", "Medium 3");
 
             // Set the dropdown menu to use the data source.
-            comboBoxDifficulty.DataSource = new BindingSource(difficultyOptions, null);
-            comboBoxDifficulty.DisplayMember = "Value";
-            comboBoxDifficulty.ValueMember = "Key";
+            comboBoxGame.DataSource = new BindingSource(difficultyOptions, null);
+            comboBoxGame.DisplayMember = "Value";
+            comboBoxGame.ValueMember = "Key";
         }
 
         private void radioButtonHard_CheckedChanged(object sender, EventArgs e) {
             difficultyOptions.Clear();
+            comboBoxGame.Enabled = true;
 
             difficultyOptions.Add("hard/h1.txt", "Hard 1");
             difficultyOptions.Add("hard/h2.txt", "Hard 2");
             difficultyOptions.Add("hard/h3.txt", "Hard 3");
 
             // Set the dropdown menu to use the data source.
-            comboBoxDifficulty.DataSource = new BindingSource(difficultyOptions, null);
-            comboBoxDifficulty.DisplayMember = "Value";
-            comboBoxDifficulty.ValueMember = "Key";
+            comboBoxGame.DataSource = new BindingSource(difficultyOptions, null);
+            comboBoxGame.DisplayMember = "Value";
+            comboBoxGame.ValueMember = "Key";
         }
 
         public void HideCaret(TextBox textbox) {
@@ -247,7 +251,7 @@ namespace Assign5 {
         }
 
         public void divertFocus(object sender, EventArgs e) {
-            comboBoxDifficulty.Focus();
+            comboBoxGame.Focus();
         }
     }
 
@@ -281,10 +285,10 @@ namespace Assign5 {
         }
 
         private void textBox_KeyPress(object sender, KeyPressEventArgs e) {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
-                (e.KeyChar != '.')) {
+            // Allow textBox to only accept numbers 1-9.
+            if (!(((Char.IsDigit(e.KeyChar) || (e.KeyChar == (char)Keys.Back)) && (e.KeyChar != '0'))))
+                // If the key pressed was not a number within 1-9, then Handle it (meaning DON'T LET PROCESSING GO FURTHER).
                 e.Handled = true;
-            }
         }
     }
 }

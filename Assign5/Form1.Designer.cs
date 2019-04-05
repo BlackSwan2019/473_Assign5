@@ -23,7 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.comboBoxDifficulty = new System.Windows.Forms.ComboBox();
+            this.comboBoxGame = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.buttonStart = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -33,13 +33,15 @@
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // comboBoxDifficulty
+            // comboBoxGame
             // 
-            this.comboBoxDifficulty.FormattingEnabled = true;
-            this.comboBoxDifficulty.Location = new System.Drawing.Point(12, 133);
-            this.comboBoxDifficulty.Name = "comboBoxDifficulty";
-            this.comboBoxDifficulty.Size = new System.Drawing.Size(75, 21);
-            this.comboBoxDifficulty.TabIndex = 0;
+            this.comboBoxGame.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxGame.Enabled = false;
+            this.comboBoxGame.FormattingEnabled = true;
+            this.comboBoxGame.Location = new System.Drawing.Point(12, 133);
+            this.comboBoxGame.Name = "comboBoxGame";
+            this.comboBoxGame.Size = new System.Drawing.Size(75, 21);
+            this.comboBoxGame.TabIndex = 0;
             // 
             // label1
             // 
@@ -122,7 +124,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonStart);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.comboBoxDifficulty);
+            this.Controls.Add(this.comboBoxGame);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -135,7 +137,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ComboBox comboBoxDifficulty;
+        private System.Windows.Forms.ComboBox comboBoxGame;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button buttonStart;
         private System.Windows.Forms.GroupBox groupBox1;
