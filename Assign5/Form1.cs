@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace Assign5 {
     public partial class Form1 : Form {
@@ -23,8 +24,10 @@ namespace Assign5 {
         int numColumns;
 
         Dictionary<string, string> difficultyOptions = new Dictionary<string, string>();    // Holds game difficulty options for Difficulty dropdown menu.
-        TextBox[] textBoxes;
 
+        TextBox[] textBoxes;
+        [DllImport("user32.dll")]
+        static extern bool HideCaret(System.IntPtr hWnd);
 
         int[,] gameMatrix;
 
@@ -175,6 +178,12 @@ namespace Assign5 {
                 textBoxes[i].Enter += textBox_Selected;
                 textBoxes[i].Leave += textBox_Deselected;
 
+                //textBoxes[i].GotFocus += divertFocus;
+
+                //HideCaret(textBoxes[i]);
+
+                //textBoxes[i].GotFocus += HideCaret(textBoxes[i].Handle);
+
                 // Adjust cell dimensions according to how large the matrix is.
                 textBoxes[i].Height = 385 / numColumns;
                 textBoxes[i].Width = 385 / numColumns;
@@ -185,6 +194,7 @@ namespace Assign5 {
                     textBoxes[i].Text = "";
                 } else {
                     textBoxes[i].Text = gameMatrix[row, col].ToString();
+                    textBoxes[i].ReadOnly = true;
                 }
 
                 // Add textBox to the form.
@@ -246,6 +256,14 @@ namespace Assign5 {
             Control control = sender as Control;
             // Reset color?
             control.BackColor = Color.FromArgb(255, 255, 255);
+        }
+
+        public void HideCaret(TextBox textbox) {
+            HideCaret(textbox.Handle);
+        }
+
+        public void divertFocus(object sender, EventArgs e) {
+            comboBoxDifficulty.Focus();
         }
     }
 }
