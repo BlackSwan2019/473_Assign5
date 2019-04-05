@@ -39,7 +39,7 @@ namespace Assign5 {
         private void button1_Start(object sender, EventArgs e) {
             int row = 0;
 
-            // If there is a field from last session, remove it bofore seeting up new game.
+            // If there is a field from last session, remove it before seeting up new game.
             if (textBoxes != null) {
                 for (int i = 0; i < numColumns * numColumns; i++) {
                     Controls.Remove(textBoxes[i]);
@@ -137,8 +137,6 @@ namespace Assign5 {
         }
 
         private void drawGame() {
-            
-
             textBoxes = new TextBox[numColumns * numColumns];
 
             int x = 200;
@@ -148,11 +146,18 @@ namespace Assign5 {
             int col = 0;
             
             for (int i = 0; i < numColumns * numColumns; i++) {
-                //System.Threading.Thread.Sleep(15);
-
                 // If we drew out the amount of columns we need, drop to new row.
                 if (i % numColumns == 0 && i > 0) {
-                    y += 50;
+                    if (gameMatrix.Length == 49) {
+                        y += 50;
+                    } else if (gameMatrix.Length == 25) {
+                        y += 71;
+                    } else {
+                        y += 385 / numColumns - 1;
+
+                        //y += 114;
+                    }
+
                     x = 200;
                     row++;
                     col = 0;
@@ -166,8 +171,22 @@ namespace Assign5 {
                 textBoxes[i].Location = new System.Drawing.Point(x, y);
                 textBoxes[i].SelectionStart = 0;
                 textBoxes[i].SelectionLength = textBoxes[i].Text.Length;
-                textBoxes[i].Height = 55;
-                textBoxes[i].Width = 55;
+
+                // Adjust cell dimensions according to how large the matrix is.
+                if (gameMatrix.Length == 49) {
+                    textBoxes[i].Height = 55;
+                    textBoxes[i].Width = 55;
+                } else if (gameMatrix.Length == 25) {
+                    textBoxes[i].Height = 72;
+                    textBoxes[i].Width = 72;
+                } else {
+                    textBoxes[i].Height = 385 / numColumns;
+                    textBoxes[i].Width = 385 / numColumns;
+
+                    //textBoxes[i].Height = 115;
+                    //textBoxes[i].Width = 115;
+                }
+
                 textBoxes[i].TextAlign = HorizontalAlignment.Center;
                 textBoxes[i].MaxLength = 1;
 
@@ -182,13 +201,17 @@ namespace Assign5 {
                 Controls.Add(textBoxes[i]);
 
                 // Shift right for next textBox placement.
-                x += 50;
+                if (gameMatrix.Length == 49) {
+                    x += 50;
+                } else if(gameMatrix.Length == 25) {
+                    x += 71;
+                } else {
+                    x += 114;
+                }
 
                 // Go to next column.
                 col++;
             }
-
-            
         }
 
         private void radioButtonEasy_CheckedChanged(object sender, EventArgs e) {
