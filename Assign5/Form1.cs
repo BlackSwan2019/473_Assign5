@@ -139,8 +139,8 @@ namespace Assign5 {
         private void drawGame() {
             textBoxes = new TextBox[numColumns * numColumns];
 
-            int x = 200;
-            int y = 30;
+            int x = 300;
+            int y = 60;
 
             int row = 0;
             int col = 0;
@@ -148,17 +148,9 @@ namespace Assign5 {
             for (int i = 0; i < numColumns * numColumns; i++) {
                 // If we drew out the amount of columns we need, drop to new row.
                 if (i % numColumns == 0 && i > 0) {
-                    if (gameMatrix.Length == 49) {
-                        y += 50;
-                    } else if (gameMatrix.Length == 25) {
-                        y += 71;
-                    } else {
-                        y += 385 / numColumns - 1;
+                    y += 385 / numColumns - 1;
 
-                        //y += 114;
-                    }
-
-                    x = 200;
+                    x = 300;
                     row++;
                     col = 0;
                 }
@@ -167,32 +159,28 @@ namespace Assign5 {
 
                 // Set properties of the textBox.
                 textBoxes[i].Multiline = true;
-                textBoxes[i].Font = new Font(textBoxes[i].Font.FontFamily, 30);
+
+                // Set cell font size according to cell size.
+                if (gameMatrix.Length == 9) {
+                    textBoxes[i].Font = new Font(textBoxes[i].Font.FontFamily, 60);
+                } else if (gameMatrix.Length == 25) {
+                    textBoxes[i].Font = new Font(textBoxes[i].Font.FontFamily, 40);
+                } else {
+                    textBoxes[i].Font = new Font(textBoxes[i].Font.FontFamily, 30);
+                }
+
                 textBoxes[i].Location = new System.Drawing.Point(x, y);
                 textBoxes[i].SelectionStart = 0;
                 textBoxes[i].SelectionLength = textBoxes[i].Text.Length;
 
                 // Adjust cell dimensions according to how large the matrix is.
-                if (gameMatrix.Length == 49) {
-                    textBoxes[i].Height = 55;
-                    textBoxes[i].Width = 55;
-                } else if (gameMatrix.Length == 25) {
-                    textBoxes[i].Height = 72;
-                    textBoxes[i].Width = 72;
-                } else {
-                    textBoxes[i].Height = 385 / numColumns;
-                    textBoxes[i].Width = 385 / numColumns;
-
-                    //textBoxes[i].Height = 115;
-                    //textBoxes[i].Width = 115;
-                }
-
+                textBoxes[i].Height = 385 / numColumns;
+                textBoxes[i].Width = 385 / numColumns;
                 textBoxes[i].TextAlign = HorizontalAlignment.Center;
                 textBoxes[i].MaxLength = 1;
 
                 if (gameMatrix[row, col] == 0) {
                     textBoxes[i].Text = "";
-
                 } else {
                     textBoxes[i].Text = gameMatrix[row, col].ToString();
                 }
@@ -201,13 +189,7 @@ namespace Assign5 {
                 Controls.Add(textBoxes[i]);
 
                 // Shift right for next textBox placement.
-                if (gameMatrix.Length == 49) {
-                    x += 50;
-                } else if(gameMatrix.Length == 25) {
-                    x += 71;
-                } else {
-                    x += 114;
-                }
+                x += 385 / numColumns - 1;
 
                 // Go to next column.
                 col++;
