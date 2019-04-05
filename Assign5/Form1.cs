@@ -130,8 +130,6 @@ namespace Assign5 {
                 
                 Console.WriteLine("\n");
 
-                
-
                 drawGame();
             }
         }
@@ -172,6 +170,10 @@ namespace Assign5 {
                 textBoxes[i].Location = new System.Drawing.Point(x, y);
                 textBoxes[i].SelectionStart = 0;
                 textBoxes[i].SelectionLength = textBoxes[i].Text.Length;
+
+                // Attach event handlers to textBox for when user clicks on textBox or leaves textBox (by clicking on another textBox).
+                textBoxes[i].Enter += textBox_Selected;
+                textBoxes[i].Leave += textBox_Deselected;
 
                 // Adjust cell dimensions according to how large the matrix is.
                 textBoxes[i].Height = 385 / numColumns;
@@ -233,6 +235,17 @@ namespace Assign5 {
             comboBoxDifficulty.DataSource = new BindingSource(difficultyOptions, null);
             comboBoxDifficulty.DisplayMember = "Value";
             comboBoxDifficulty.ValueMember = "Key";
+        }
+
+        void textBox_Selected(object sender, EventArgs e) {
+            Control control = sender as Control;
+            control.BackColor = Color.FromArgb(120, 200, 255);
+        }
+
+        void textBox_Deselected(object sender, EventArgs e) {
+            Control control = sender as Control;
+            // Reset color?
+            control.BackColor = Color.FromArgb(255, 255, 255);
         }
     }
 }

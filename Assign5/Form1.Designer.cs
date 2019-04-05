@@ -44,6 +44,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.White;
             this.label1.Location = new System.Drawing.Point(12, 114);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(35, 13);
@@ -65,6 +66,7 @@
             this.groupBox1.Controls.Add(this.radioButtonHard);
             this.groupBox1.Controls.Add(this.radioButtonMedium);
             this.groupBox1.Controls.Add(this.radioButton1);
+            this.groupBox1.ForeColor = System.Drawing.Color.White;
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(75, 93);
@@ -75,6 +77,7 @@
             // radioButtonHard
             // 
             this.radioButtonHard.AutoSize = true;
+            this.radioButtonHard.ForeColor = System.Drawing.Color.White;
             this.radioButtonHard.Location = new System.Drawing.Point(6, 65);
             this.radioButtonHard.Name = "radioButtonHard";
             this.radioButtonHard.Size = new System.Drawing.Size(48, 17);
@@ -87,6 +90,7 @@
             // radioButtonMedium
             // 
             this.radioButtonMedium.AutoSize = true;
+            this.radioButtonMedium.ForeColor = System.Drawing.Color.White;
             this.radioButtonMedium.Location = new System.Drawing.Point(6, 42);
             this.radioButtonMedium.Name = "radioButtonMedium";
             this.radioButtonMedium.Size = new System.Drawing.Size(62, 17);
@@ -99,6 +103,7 @@
             // radioButton1
             // 
             this.radioButton1.AutoSize = true;
+            this.radioButton1.ForeColor = System.Drawing.Color.White;
             this.radioButton1.Location = new System.Drawing.Point(6, 19);
             this.radioButton1.Name = "radioButton1";
             this.radioButton1.Size = new System.Drawing.Size(48, 17);
@@ -112,7 +117,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 499);
+            this.BackColor = System.Drawing.Color.Black;
+            this.ClientSize = new System.Drawing.Size(760, 499);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
