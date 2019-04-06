@@ -201,8 +201,9 @@ namespace Assign5 {
                 col++;
             }
 
-            int topSumsX = 300 + (textBoxes[0].Width / 2) -  5;
-            int topSumsY = 30;
+            // Beginning coordinates of first top label.
+            int topSumsX = 300 + (textBoxes[0].Width / 2) -  10;
+            int topSumsY = 28;
 
             // Draw sum labels across the top of the play field.
             for (int i = 0; i < numColumns; i++) {
@@ -224,23 +225,25 @@ namespace Assign5 {
                 sumsX[i].Width = 30;
                 sumsX[i].Location = new Point(topSumsX, topSumsY);
                 sumsX[i].Font = new Font(sumsX[i].Font.FontFamily, 12);
+                sumsX[i].TextAlign = ContentAlignment.MiddleCenter;
 
                 Controls.Add(sumsX[i]);
 
-                topSumsX += textBoxes[0].Width - 1;
+                topSumsX += textBoxes[0].Width - 2;
             }
 
+            // Beginning coordinates of first side label.
             int leftSumsX = 270;
-            int leftSumsY = 115;
+            int leftSumsY = 45 + (textBoxes[0].Height / 2);
 
             // Draw sum labels down the left side the play field.
             for (int i = 0; i < numColumns; i++) {
                 sumsY[i] = new Label();
 
                 // Add up row values.
-                for (int r = 0; r < numColumns; r++) {
-                    for (int c = 0; c < numColumns; c++) {
-                        if (c == i) {
+                for (int c = 0; c < numColumns; c++) {
+                    for (int r = 0; r < numColumns; r++) {
+                        if (r == i) {
                             summationY[i] += gameMatrix[r, c];
                         }
                     }
@@ -253,11 +256,11 @@ namespace Assign5 {
                 sumsY[i].Width = 30;
                 sumsY[i].Location = new Point(leftSumsX, leftSumsY);
                 sumsY[i].Font = new Font(sumsY[i].Font.FontFamily, 12);
-
+                sumsY[i].TextAlign = ContentAlignment.MiddleCenter;
 
                 Controls.Add(sumsY[i]);
 
-                leftSumsY += textBoxes[0].Height + 1;
+                leftSumsY += textBoxes[0].Height - 1;
             }
         }
 
