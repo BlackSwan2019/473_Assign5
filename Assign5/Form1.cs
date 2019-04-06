@@ -137,6 +137,7 @@ namespace Assign5 {
             sumsY = new Label[numColumns];
             summationX = new int[numColumns];
             summationY = new int[numColumns];
+            rowColTag rowCol;
 
             int x = 300;
             int y = 60;
@@ -176,6 +177,10 @@ namespace Assign5 {
                 textBoxes[i].Width = 385 / numColumns;
                 textBoxes[i].TextAlign = HorizontalAlignment.Center;
                 textBoxes[i].MaxLength = 1;
+
+                // Assign a row-and-column tag to this box so we can reference it later.
+                rowCol = new rowColTag(row, col);
+                textBoxes[i].Tag = rowCol;
 
                 if (gameMatrix[row, col] == 0) {
                     textBoxes[i].Text = "";
@@ -326,9 +331,40 @@ namespace Assign5 {
         *  Return:     void
         */
         void valueChanged(object sender, EventArgs e) {
-            var cell = sender as GameCell;
+            GameCell cell = (GameCell)sender;
 
-            Console.WriteLine("Which cell: " + cell);
+            rowColTag rowCol = (rowColTag)cell.Tag;
+
+            // Update gameMatrix at the specified element.
+            gameMatrix[rowCol.row, rowCol.col] = Convert.ToInt32(cell.Text);
+
+            for (int i = 0; i < numColumns; i++) {
+                // Reset the label value.
+                summationX[i] = 0;
+                summationY[i] = 0;
+
+                // Add up column values.
+                for (int r = 0; r < numColumns; r++) {
+                    for (int c = 0; c < numColumns; c++) {
+                        if (c == i) {
+                            summationX[i] += gameMatrix[r, c];
+                        }
+                    }
+                }
+
+                sumsX[i].Text = summationX[i].ToString();
+
+                // Add up row values.
+                for (int c = 0; c < numColumns; c++) {
+                    for (int r = 0; r < numColumns; r++) {
+                        if (r == i) {
+                            summationY[i] += gameMatrix[r, c];
+                        }
+                    }
+                }
+
+                sumsY[i].Text = summationY[i].ToString();
+            }
         }
     }
 
@@ -368,5 +404,15 @@ namespace Assign5 {
                 e.Handled = true;
             }
         }     
+    }
+
+    public class rowColTag {
+        public int row;
+        public int col;
+
+        public rowColTag(int newRow, int newCol) {
+            row = newRow;
+            col = newCol;
+        }
     }
 }
