@@ -332,11 +332,17 @@ namespace Assign5 {
         */
         void valueChanged(object sender, EventArgs e) {
             GameCell cell = (GameCell)sender;
-
             rowColTag rowCol = (rowColTag)cell.Tag;
 
-            // Update gameMatrix at the specified element.
-            gameMatrix[rowCol.row, rowCol.col] = Convert.ToInt32(cell.Text);
+            char[] textBoxChars = (cell.Text).ToCharArray();
+
+            // If cell is blank, then set its value to 0, else update gameMatrix with cell's new value.
+            if (cell.Text.Length == 0) {
+                gameMatrix[rowCol.row, rowCol.col] = 0;
+            } else {
+                // Update gameMatrix at the specified element.
+                gameMatrix[rowCol.row, rowCol.col] = Convert.ToInt32(cell.Text);
+            }
 
             for (int i = 0; i < numColumns; i++) {
                 // Reset the label value.
