@@ -26,7 +26,12 @@ namespace Assign5 {
         Dictionary<string, string> difficultyOptions = new Dictionary<string, string>();    // Holds game difficulty options for Difficulty dropdown menu.
 
         GameCell[] textBoxes;
-        Label[] sums;
+
+        Label[] sumsX;
+        Label[] sumsY;
+        int[] summationX;
+        int[] summationY;
+
         [DllImport("user32.dll")]
         static extern bool HideCaret(System.IntPtr hWnd);
 
@@ -51,9 +56,10 @@ namespace Assign5 {
             }
 
             // If there are labels from last session, remove them.
-            if (sums != null) {
+            if (sumsX != null) {
                 for (int i = 0; i < numColumns; i++) {
-                    Controls.Remove(sums[i]);
+                    Controls.Remove(sumsX[i]);
+                    Controls.Remove(sumsY[i]);
                 }
             }
 
@@ -127,7 +133,10 @@ namespace Assign5 {
         
         private void drawGame() {
             textBoxes = new GameCell[numColumns * numColumns];
-            sums = new Label[numColumns];
+            sumsX = new Label[numColumns];
+            sumsY = new Label[numColumns];
+            summationX = new int[numColumns];
+            summationY = new int[numColumns];
 
             int x = 300;
             int y = 60;
@@ -163,8 +172,6 @@ namespace Assign5 {
                 textBoxes[i].SelectionStart = 0;
                 textBoxes[i].SelectionLength = textBoxes[i].Text.Length;
                 textBoxes[i].Cursor = Cursors.Default;
-
-                // Adjust cell dimensions according to how large the matrix is.
                 textBoxes[i].Height = 385 / numColumns;
                 textBoxes[i].Width = 385 / numColumns;
                 textBoxes[i].TextAlign = HorizontalAlignment.Center;
@@ -197,30 +204,60 @@ namespace Assign5 {
             int topSumsX = 300 + (textBoxes[0].Width / 2) -  5;
             int topSumsY = 30;
 
-            int summation = 0;
-
             // Draw sum labels across the top of the play field.
             for (int i = 0; i < numColumns; i++) {
-                sums[i] = new Label();
+                sumsX[i] = new Label();
 
                 // Add up column values.
                 for (int r = 0; r < numColumns; r++) {
                     for (int c = 0; c < numColumns; c++) {
-                        if (c == 0) {
-                            summation += gameMatrix[r, c];
+                        if (c == i) {
+                            summationX[i] += gameMatrix[r, c];
                         }
                     }
                 }
 
-                sums[i].Text = summation.ToString();
-                sums[i].ForeColor = Color.White;
-                sums[i].Width = 15;
-                sums[i].Location = new Point(topSumsX, topSumsY);
+                sumsX[i].Text = summationX[i].ToString();
 
-                Controls.Add(sums[i]);
+                sumsX[i].ForeColor = Color.White;
+                sumsX[i].Height = 30;
+                sumsX[i].Width = 30;
+                sumsX[i].Location = new Point(topSumsX, topSumsY);
+                sumsX[i].Font = new Font(sumsX[i].Font.FontFamily, 12);
 
-                //topSumsX += textBoxes[0].Width - 5;
+                Controls.Add(sumsX[i]);
+
                 topSumsX += textBoxes[0].Width - 1;
+            }
+
+            int leftSumsX = 270;
+            int leftSumsY = 115;
+
+            // Draw sum labels down the left side the play field.
+            for (int i = 0; i < numColumns; i++) {
+                sumsY[i] = new Label();
+
+                // Add up row values.
+                for (int r = 0; r < numColumns; r++) {
+                    for (int c = 0; c < numColumns; c++) {
+                        if (c == i) {
+                            summationY[i] += gameMatrix[r, c];
+                        }
+                    }
+                }
+
+                sumsY[i].Text = summationY[i].ToString();
+
+                sumsY[i].ForeColor = Color.White;
+                sumsY[i].Height = 30;
+                sumsY[i].Width = 30;
+                sumsY[i].Location = new Point(leftSumsX, leftSumsY);
+                sumsY[i].Font = new Font(sumsY[i].Font.FontFamily, 12);
+
+
+                Controls.Add(sumsY[i]);
+
+                leftSumsY += textBoxes[0].Height + 1;
             }
         }
 
