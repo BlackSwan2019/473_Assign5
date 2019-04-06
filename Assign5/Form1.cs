@@ -31,11 +31,14 @@ namespace Assign5 {
         Label[] sumsY;
         int[] summationX;
         int[] summationY;
+        int[] summationXAnswer;
+        int[] summationYAnswer;
 
         [DllImport("user32.dll")]
         static extern bool HideCaret(System.IntPtr hWnd);
 
-        int[,] gameMatrix;
+        int[,] gameMatrix;  // Data model for the game. It changes as user plays the game.
+        int[,] solutionMatrix;  // Data model for the game. It changes as user plays the game.
 
         public Form1() {
             InitializeComponent();
@@ -100,7 +103,7 @@ namespace Assign5 {
                 }
 
                 // Create the two-dimensional array that will hold game numbers when solved.
-                int[,] gameSolvedMatrix = new int[numColumns, numColumns];
+                solutionMatrix = new int[numColumns, numColumns];
 
                 row = 0;
 
@@ -115,7 +118,7 @@ namespace Assign5 {
 
                     for (int i = 0; i < numColumns; i++) {
                         // Convert number character to integer and then insert into the game matrix.
-                        gameSolvedMatrix[row, i] = (int)Char.GetNumericValue(charNums[i]);
+                        solutionMatrix[row, i] = (int)Char.GetNumericValue(charNums[i]);
                     }
                     
                     // Move on to next row.
@@ -126,17 +129,50 @@ namespace Assign5 {
                 }
 
                 row = 0;
-                
+
+                getAnswers();
                 drawGame();
             }
         }
-        
+
+        private void getAnswers() {
+            summationXAnswer = new int[numColumns];
+            summationYAnswer = new int[numColumns];
+
+            // Draw sum labels across the top of the play field.
+            for (int i = 0; i < numColumns; i++) {
+                // Add up column values.
+                for (int r = 0; r < numColumns; r++) {
+                    for (int c = 0; c < numColumns; c++) {
+                        if (c == i) {
+                            summationXAnswer[i] += solutionMatrix[r, c];
+                        }
+                    }
+                }
+            }
+
+            // Draw sum labels down the left side the play field.
+            for (int i = 0; i < numColumns; i++) {
+                // Add up row values.
+                for (int c = 0; c < numColumns; c++) {
+                    for (int r = 0; r < numColumns; r++) {
+                        if (r == i) {
+                            summationYAnswer[i] += solutionMatrix[r, c];
+                        }
+                    }
+                }
+            }
+        }
+
         private void drawGame() {
             textBoxes = new GameCell[numColumns * numColumns];
+
             sumsX = new Label[numColumns];
             sumsY = new Label[numColumns];
+
             summationX = new int[numColumns];
             summationY = new int[numColumns];
+
             rowColTag rowCol;
 
             int x = 300;
@@ -370,6 +406,15 @@ namespace Assign5 {
                 }
 
                 sumsY[i].Text = summationY[i].ToString();
+
+                // Check if sum of row or column has reached the solution sum.
+                if (summationX[i] == summationXAnswer[i]) {
+                    sumsX[i].ForeColor = Color.FromArgb(51, 204, 51);
+                }
+
+                if (summationY[i] == summationYAnswer[i]) {
+                    sumsY[i].ForeColor = Color.FromArgb(51, 204, 51);
+                }
             }
         }
     }
