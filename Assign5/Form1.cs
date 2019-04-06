@@ -37,16 +37,23 @@ namespace Assign5 {
         }
 
         private void Form1_Load(object sender, EventArgs e) {
-
+            radioButtonEasy.Checked = true;
         }
 
         private void button1_Start(object sender, EventArgs e) {
             int row = 0;
 
-            // If there is a field from last session, remove it before seeting up new game.
+            // If there are textBoxes from last session, remove them.
             if (textBoxes != null) {
                 for (int i = 0; i < numColumns * numColumns; i++) {
                     Controls.Remove(textBoxes[i]);
+                }
+            }
+
+            // If there are labels from last session, remove them.
+            if (sums != null) {
+                for (int i = 0; i < numColumns; i++) {
+                    Controls.Remove(sums[i]);
                 }
             }
 
@@ -86,15 +93,6 @@ namespace Assign5 {
                         break;
                 }
 
-                Console.WriteLine("Initial state: ");
-
-                // Print out initial game state.
-                for (int r = 0; r < numColumns; r++) {
-                    for (int c = 0; c < numColumns; c++) {
-                        Console.Write(gameMatrix[r, c]);
-                    }
-                }
-
                 // Create the two-dimensional array that will hold game numbers when solved.
                 int[,] gameSolvedMatrix = new int[numColumns, numColumns];
 
@@ -120,45 +118,16 @@ namespace Assign5 {
                     if (row == numColumns)
                         break;
                 }
-                
-                Console.WriteLine("\nFinal state: ");
-
-                // Print out initial game state.
-                for (int r = 0; r < numColumns; r++) {
-                    for (int c = 0; c < numColumns; c++) {
-                        Console.Write(gameSolvedMatrix[r, c]);
-                    }
-                }
 
                 row = 0;
                 
-                Console.WriteLine("\n");
-
                 drawGame();
             }
         }
         
         private void drawGame() {
             textBoxes = new GameCell[numColumns * numColumns];
-            sums = new Label[numColumns * 2];
-
-            int topSumsX = 300;
-            int topSumsY = 30;
-
-            // Draw sum labels across the top of the play field.
-            for (int i = 0; i < numColumns; i++) {
-                Console.WriteLine("LOOP");
-                sums[i] = new Label();
-
-                sums[i].Text = "00";
-                sums[i].ForeColor = Color.White;
-
-                sums[i].Location = new Point(topSumsX, topSumsY);
-
-                Controls.Add(sums[i]);
-                
-                topSumsX += 30;
-            }
+            sums = new Label[numColumns];
 
             int x = 300;
             int y = 60;
@@ -190,7 +159,7 @@ namespace Assign5 {
                     textBoxes[i].Font = new Font(textBoxes[i].Font.FontFamily, 30);
                 }
 
-                textBoxes[i].Location = new System.Drawing.Point(x, y);
+                textBoxes[i].Location = new Point(x, y);
                 textBoxes[i].SelectionStart = 0;
                 textBoxes[i].SelectionLength = textBoxes[i].Text.Length;
                 textBoxes[i].Cursor = Cursors.Default;
@@ -224,6 +193,35 @@ namespace Assign5 {
                 // Go to next column.
                 col++;
             }
+
+            int topSumsX = 300 + (textBoxes[0].Width / 2) -  5;
+            int topSumsY = 30;
+
+            int summation = 0;
+
+            // Draw sum labels across the top of the play field.
+            for (int i = 0; i < numColumns; i++) {
+                sums[i] = new Label();
+
+                // Add up column values.
+                for (int r = 0; r < numColumns; r++) {
+                    for (int c = 0; c < numColumns; c++) {
+                        if (c == 0) {
+                            summation += gameMatrix[r, c];
+                        }
+                    }
+                }
+
+                sums[i].Text = summation.ToString();
+                sums[i].ForeColor = Color.White;
+                sums[i].Width = 15;
+                sums[i].Location = new Point(topSumsX, topSumsY);
+
+                Controls.Add(sums[i]);
+
+                //topSumsX += textBoxes[0].Width - 5;
+                topSumsX += textBoxes[0].Width - 1;
+            }
         }
 
         private void radioButtonEasy_CheckedChanged(object sender, EventArgs e) {
@@ -243,7 +241,7 @@ namespace Assign5 {
         private void radioButtonMedium_CheckedChanged(object sender, EventArgs e) {
             difficultyOptions.Clear();
             comboBoxGame.Enabled = true;
-
+            
             difficultyOptions.Add("medium/m1.txt", "Medium 1");
             difficultyOptions.Add("medium/m2.txt", "Medium 2");
             difficultyOptions.Add("medium/m3.txt", "Medium 3");
@@ -257,7 +255,7 @@ namespace Assign5 {
         private void radioButtonHard_CheckedChanged(object sender, EventArgs e) {
             difficultyOptions.Clear();
             comboBoxGame.Enabled = true;
-
+            
             difficultyOptions.Add("hard/h1.txt", "Hard 1");
             difficultyOptions.Add("hard/h2.txt", "Hard 2");
             difficultyOptions.Add("hard/h3.txt", "Hard 3");
