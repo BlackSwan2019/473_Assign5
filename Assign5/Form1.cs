@@ -468,7 +468,7 @@ namespace Assign5 {
                 // value, turn label red.
                 if (summationX[i] == summationXAnswer[i]) {
                     sumsX[i].ForeColor = Color.FromArgb(51, 204, 51);
-                } else if (summationX[i] > summationXAnswer[i]) {
+                } else if (summationX[i] > summationXAnswer[i] || (columnFilled(gameMatrix, i) && summationX[i] != summationXAnswer[i])) {
                     sumsX[i].ForeColor = Color.Red;
                 } else {
                     sumsX[i].ForeColor = Color.White;
@@ -476,12 +476,34 @@ namespace Assign5 {
 
                 if (summationY[i] == summationYAnswer[i]) {
                     sumsY[i].ForeColor = Color.FromArgb(51, 204, 51);
-                } else if (summationY[i] > summationYAnswer[i]) {
+                } else if (summationY[i] > summationYAnswer[i] || (rowFilled(gameMatrix, i) && summationY[i] != summationYAnswer[i])) {
                     sumsY[i].ForeColor = Color.Red;
                 } else {
                     sumsY[i].ForeColor = Color.White;
                 }
             }
+        }
+
+        private bool rowFilled(int[,] matrix, int row) {
+            // If there are any unfilled cells in the row, return false.
+            for (int c = 0; c < numColumns; c++) {
+                if (gameMatrix[row, c] == 0) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private bool columnFilled(int[,] matrix, int column) {
+            // If there are any unfilled cells in the row, return false.
+            for (int r = 0; r < numColumns; r++) {
+                if (gameMatrix[r, column] == 0) {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 
