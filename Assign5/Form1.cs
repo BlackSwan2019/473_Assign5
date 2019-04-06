@@ -29,6 +29,9 @@ namespace Assign5 {
 
         Label[] sumsX;
         Label[] sumsY;
+        Label[] sumsXAnswer;
+        Label[] sumsYAnswer;
+
         int[] summationX;
         int[] summationY;
         int[] summationXAnswer;
@@ -63,6 +66,8 @@ namespace Assign5 {
                 for (int i = 0; i < numColumns; i++) {
                     Controls.Remove(sumsX[i]);
                     Controls.Remove(sumsY[i]);
+                    Controls.Remove(sumsXAnswer[i]);
+                    Controls.Remove(sumsYAnswer[i]);
                 }
             }
 
@@ -242,6 +247,8 @@ namespace Assign5 {
                 col++;
             }
 
+            drawSolutionLabels();
+
             // Beginning coordinates of first top label.
             int topSumsX = 300 + (textBoxes[0].Width / 2) -  10;
             int topSumsY = 28;
@@ -302,6 +309,55 @@ namespace Assign5 {
                 Controls.Add(sumsY[i]);
 
                 leftSumsY += textBoxes[0].Height - 1;
+            }
+        }
+
+        private void drawSolutionLabels() {
+            sumsXAnswer = new Label[numColumns];
+            sumsYAnswer = new Label[numColumns];
+
+            // Beginning coordinates of first top label.
+            int topXAnswer = 295 + (textBoxes[0].Width / 2) - 10;
+            int topYAnswer = 0;
+
+            // Draw sum labels across the top of the play field.
+            for (int i = 0; i < numColumns; i++) {
+                sumsXAnswer[i] = new Label();
+
+                sumsXAnswer[i].Text = "(" + summationXAnswer[i].ToString() + ")";
+
+                sumsXAnswer[i].ForeColor = Color.White;
+                sumsXAnswer[i].Height = 35;
+                sumsXAnswer[i].Width = 40;
+                sumsXAnswer[i].Location = new Point(topXAnswer, topYAnswer);
+                sumsXAnswer[i].Font = new Font(sumsXAnswer[i].Font.FontFamily, 12);
+                sumsXAnswer[i].TextAlign = ContentAlignment.MiddleCenter;
+
+                Controls.Add(sumsXAnswer[i]);
+
+                topXAnswer += textBoxes[0].Width - 2;
+            }
+
+            // Beginning coordinates of first side label.
+            int leftSumsXAnswer = 235;
+            int leftSumsYAnswer = 43 + (textBoxes[0].Height / 2);
+
+            // Draw sum labels down the left side the play field.
+            for (int i = 0; i < numColumns; i++) {
+                sumsYAnswer[i] = new Label();
+
+                sumsYAnswer[i].Text = "(" + summationYAnswer[i].ToString() + ")";
+
+                sumsYAnswer[i].ForeColor = Color.White;
+                sumsYAnswer[i].Height = 35;
+                sumsYAnswer[i].Width = 40;
+                sumsYAnswer[i].Location = new Point(leftSumsXAnswer, leftSumsYAnswer);
+                sumsYAnswer[i].Font = new Font(sumsYAnswer[i].Font.FontFamily, 12);
+                sumsYAnswer[i].TextAlign = ContentAlignment.MiddleCenter;
+
+                Controls.Add(sumsYAnswer[i]);
+
+                leftSumsYAnswer += textBoxes[0].Height - 1;
             }
         }
 
@@ -407,13 +463,23 @@ namespace Assign5 {
 
                 sumsY[i].Text = summationY[i].ToString();
 
-                // Check if sum of row or column has reached the solution sum.
+                // Check if sum of row or column has reached the solution sum. If they are under the solution value,
+                // keep label white. If they are same as solution value, turn label green. If they overshoot solution
+                // value, turn label red.
                 if (summationX[i] == summationXAnswer[i]) {
                     sumsX[i].ForeColor = Color.FromArgb(51, 204, 51);
+                } else if (summationX[i] > summationXAnswer[i]) {
+                    sumsX[i].ForeColor = Color.Red;
+                } else {
+                    sumsX[i].ForeColor = Color.White;
                 }
 
                 if (summationY[i] == summationYAnswer[i]) {
                     sumsY[i].ForeColor = Color.FromArgb(51, 204, 51);
+                } else if (summationY[i] > summationYAnswer[i]) {
+                    sumsY[i].ForeColor = Color.Red;
+                } else {
+                    sumsY[i].ForeColor = Color.White;
                 }
             }
         }
