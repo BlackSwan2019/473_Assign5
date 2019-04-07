@@ -27,6 +27,8 @@ namespace Assign5 {
         string fileName;
         string pathToGame;
 
+        bool savedGame = false;
+
         GameCell[] textBoxes;
 
         Label[] sumsX;
@@ -42,7 +44,8 @@ namespace Assign5 {
         [DllImport("user32.dll")]
         static extern bool HideCaret(System.IntPtr hWnd);
 
-        int[,] gameMatrix;  // Data model for the game. It changes as user plays the game.
+        int[,] initialMatrix;   // Data model for the game. It changes as user plays the game.
+        int[,] gameMatrix;      // Data model for the game. It changes as user plays the game.
         int[,] solutionMatrix;  // Data model for the game. It changes as user plays the game.
 
         public Form1() {
@@ -57,6 +60,7 @@ namespace Assign5 {
             int row = 0;
 
             buttonSave.Enabled = true;
+            savedGame = false;
 
             // If there are textBoxes from last session, remove them.
             if (textBoxes != null) {
@@ -76,15 +80,17 @@ namespace Assign5 {
             }
 
             fileName = ((KeyValuePair<string, string>)comboBoxGame.SelectedItem).Key;
-
+            
             // If there is a saved game for this difficulty and field, then use that one.
             if ((new FileInfo("../../../Saves/" + fileName)).Exists) {
                 pathToGame = "../../../Saves/" + fileName;
+                savedGame = true;
             } else {
                 pathToGame = "../../../Resources/" + fileName;
             }
 
             using (var gameFile = new StreamReader(pathToGame)) {
+                Console.WriteLine("LINE: " + gameFile);
                 gameData = gameFile.ReadLine();
 
                 // Read a row of numbers from the file and count how many numbers there are. That's how many columns and rows the game will have.
@@ -93,22 +99,75 @@ namespace Assign5 {
                 // Get a character array of that row's numbers.
                 char[] charNums = gameData.ToCharArray();
 
+                initialMatrix = new int[numColumns, numColumns];
+
+                if (savedGame) {
+                    // Fill in the first row of the initial matrix with numbers.
+                    for (int i = 0; i < numColumns; i++) {
+                        initialMatrix[row, i] = (int)Char.GetNumericValue(charNums[i]);
+                    }
+
+                    // Move on to next row.
+                    row++;
+
+                    while ((gameData = gameFile.ReadLine()) != null) {
+                        // Get a character array of that row's numbers.
+                        charNums = gameData.ToCharArray();
+
+                        for (int i = 0; i < numColumns; i++) {
+                            // Convert number character to integer and then insert into the game matrix.
+                            initialMatrix[row, i] = (int)Char.GetNumericValue(charNums[i]);
+                        }
+
+                        // Move on to next row.
+                        row++;
+
+                        if (row == numColumns)
+                            break;
+                    }
+
+                    foreach (int val in initialMatrix) {
+                        Console.WriteLine(val);
+                    }
+                }
+
                 // Create the two-dimensional array that will hold game numbers.
                 gameMatrix = new int[numColumns, numColumns];
 
-                // Fill in the first row of the matrix with numbers.
-                for (int i = 0; i < numColumns; i++) {
-                    gameMatrix[row, i] = (int)Char.GetNumericValue(charNums[i]);
+                row = 0;
+
+                // If this is a new game, then allow priming read for gameMatrix.
+                if (!savedGame) {
+                    // Fill in the first row of the matrix with numbers.
+                    for (int i = 0; i < numColumns; i++) {
+                        if (!savedGame) {
+                            initialMatrix[row, i] = (int)Char.GetNumericValue(charNums[i]);
+                        }
+
+                        // Convert number character to integer and then insert into the game matrix.
+                        gameMatrix[row, i] = (int)Char.GetNumericValue(charNums[i]);
+                    }
+
+                    // Move on to next row.
+                    row++;
                 }
 
-                // Move on to next row.
-                row++;
-
                 while ((gameData = gameFile.ReadLine()) != null) {
+                    charNums = gameData.ToCharArray();
+
+                    // If the blank line between matrices is read in, skip processing it.
+                    if (gameData.Length == 0) {
+                        continue;
+                    }
+
                     // Get a character array of that row's numbers.
                     charNums = gameData.ToCharArray();
 
                     for (int i = 0; i < numColumns; i++) {
+                        if (!savedGame) {
+                            initialMatrix[row, i] = (int)Char.GetNumericValue(charNums[i]);
+                        }
+
                         // Convert number character to integer and then insert into the game matrix.
                         gameMatrix[row, i] = (int)Char.GetNumericValue(charNums[i]);
                     }
@@ -236,8 +295,18 @@ namespace Assign5 {
                 rowCol = new rowColTag(row, col);
                 textBoxes[i].Tag = rowCol;
 
-                if (gameMatrix[row, col] == 0) {
-                    textBoxes[i].Text = "";
+                // If initialMatrix has a 0 at this element (meaning it was blank to begin with)...
+                if (initialMatrix[row, col] == 0) {
+                    // If we are in a saved game, put saved value in cell.
+                    if (savedGame) {
+                        if (gameMatrix[row, col] == 0) {
+                            textBoxes[i].Text = "";
+                        } else {
+                            textBoxes[i].Text = gameMatrix[row, col].ToString();
+                        }
+                    } else { // Else, if user never put a value in there, leave it blank.
+                        textBoxes[i].Text = "";
+                    }
                 } else {
                     textBoxes[i].Text = gameMatrix[row, col].ToString();
                     textBoxes[i].ReadOnly = true;
@@ -532,6 +601,21 @@ namespace Assign5 {
             }
             
             using (StreamWriter saveFile = new StreamWriter("../../../Saves/" + fileName)) {
+                foreach (int value in initialMatrix){
+                    if (columnCounter == numColumns) {
+                        saveFile.Write("\n");
+                        columnCounter = 0;
+                    }
+
+                    saveFile.Write(value);
+
+                    columnCounter++;
+                }
+
+                saveFile.Write("\n\n");
+
+                columnCounter = 0;
+
                 foreach (int value in gameMatrix) {
                     if (columnCounter == numColumns) {
                         saveFile.Write("\n");
