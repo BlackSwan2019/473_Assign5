@@ -30,6 +30,7 @@
             this.radioButtonHard = new System.Windows.Forms.RadioButton();
             this.radioButtonMedium = new System.Windows.Forms.RadioButton();
             this.radioButtonEasy = new System.Windows.Forms.RadioButton();
+            this.buttonSave = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -115,12 +116,23 @@
             this.radioButtonEasy.UseVisualStyleBackColor = true;
             this.radioButtonEasy.CheckedChanged += new System.EventHandler(this.radioButtonEasy_CheckedChanged);
             // 
+            // buttonSave
+            // 
+            this.buttonSave.Location = new System.Drawing.Point(12, 205);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(75, 23);
+            this.buttonSave.TabIndex = 4;
+            this.buttonSave.Text = "Save";
+            this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(760, 499);
+            this.Controls.Add(this.buttonSave);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonStart);
             this.Controls.Add(this.label1);
@@ -144,6 +156,7 @@
         private System.Windows.Forms.RadioButton radioButtonHard;
         private System.Windows.Forms.RadioButton radioButtonMedium;
         private System.Windows.Forms.RadioButton radioButtonEasy;
+        private System.Windows.Forms.Button buttonSave;
     }
 }
 

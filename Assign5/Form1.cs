@@ -24,6 +24,7 @@ namespace Assign5 {
         int numColumns;
 
         Dictionary<string, string> difficultyOptions = new Dictionary<string, string>();    // Holds game difficulty options for Difficulty dropdown menu.
+        string fileName;
 
         GameCell[] textBoxes;
 
@@ -71,7 +72,9 @@ namespace Assign5 {
                 }
             }
 
-            using (var gameFile = new StreamReader("../../../Resources/" + ((KeyValuePair<string, string>)comboBoxGame.SelectedItem).Key)) {
+            fileName = ((KeyValuePair<string, string>)comboBoxGame.SelectedItem).Key;
+
+            using (var gameFile = new StreamReader("../../../Resources/" + fileName)) {
                 gameData = gameFile.ReadLine();
 
                 // Read a row of numbers from the file and count how many numbers there are. That's how many columns and rows the game will have.
@@ -335,7 +338,7 @@ namespace Assign5 {
 
                 Controls.Add(sumsXAnswer[i]);
 
-                topXAnswer += textBoxes[0].Width - 2;
+                topXAnswer += textBoxes[0].Width - 1;
             }
 
             // Beginning coordinates of first side label.
@@ -465,7 +468,7 @@ namespace Assign5 {
 
                 // Check if sum of row or column has reached the solution sum. If they are under the solution value,
                 // keep label white. If they are same as solution value, turn label green. If they overshoot solution
-                // value, turn label red.
+                // value or finish a row or column but sum is still wrong, turn label red.
                 if (summationX[i] == summationXAnswer[i]) {
                     sumsX[i].ForeColor = Color.FromArgb(51, 204, 51);
                 } else if (summationX[i] > summationXAnswer[i] || (columnFilled(gameMatrix, i) && summationX[i] != summationXAnswer[i])) {
@@ -504,6 +507,27 @@ namespace Assign5 {
             }
 
             return true;
+        }
+
+        private void buttonSave_Click(object sender, EventArgs e) {
+            int columnCounter = 0;
+
+            if (!(new FileInfo("../../../Saves/" + fileName)).Exists) {
+                (new FileInfo("../../../Saves/" + fileName)).Directory.Create();
+            } 
+
+            using (StreamWriter saveFile = new StreamWriter("../../../Saves/" + fileName)) {
+                foreach (int value in gameMatrix) {
+                    if (columnCounter == numColumns) {
+                        saveFile.Write("\n");
+                        columnCounter = 0;
+                    }
+
+                    saveFile.Write(value);
+
+                    columnCounter++;
+                }
+            }
         }
     }
 
