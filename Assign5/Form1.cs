@@ -248,6 +248,7 @@ namespace Assign5 {
                     textBoxes[i].BackColor = Color.FromArgb(230, 230, 230);
                 }
 
+                // Add onChange handler  to the textBox.
                 textBoxes[i].TextChanged += valueChanged;
 
                 // Add textBox to the form.
@@ -532,6 +533,21 @@ namespace Assign5 {
             
             using (StreamWriter saveFile = new StreamWriter("../../../Saves/" + fileName)) {
                 foreach (int value in gameMatrix) {
+                    if (columnCounter == numColumns) {
+                        saveFile.Write("\n");
+                        columnCounter = 0;
+                    }
+
+                    saveFile.Write(value);
+
+                    columnCounter++;
+                }
+
+                saveFile.Write("\n\n");
+
+                columnCounter = 0;
+
+                foreach (int value in solutionMatrix) {
                     if (columnCounter == numColumns) {
                         saveFile.Write("\n");
                         columnCounter = 0;
