@@ -25,6 +25,7 @@ namespace Assign5 {
 
         Dictionary<string, string> difficultyOptions = new Dictionary<string, string>();    // Holds game difficulty options for Difficulty dropdown menu.
         string fileName;
+        string pathToGame;
 
         GameCell[] textBoxes;
 
@@ -55,6 +56,8 @@ namespace Assign5 {
         private void button1_Start(object sender, EventArgs e) {
             int row = 0;
 
+            buttonSave.Enabled = true;
+
             // If there are textBoxes from last session, remove them.
             if (textBoxes != null) {
                 for (int i = 0; i < numColumns * numColumns; i++) {
@@ -74,7 +77,14 @@ namespace Assign5 {
 
             fileName = ((KeyValuePair<string, string>)comboBoxGame.SelectedItem).Key;
 
-            using (var gameFile = new StreamReader("../../../Resources/" + fileName)) {
+            // If there is a saved game for this difficulty and field, then use that one.
+            if ((new FileInfo("../../../Saves/" + fileName)).Exists) {
+                pathToGame = "../../../Saves/" + fileName;
+            } else {
+                pathToGame = "../../../Resources/" + fileName;
+            }
+
+            using (var gameFile = new StreamReader(pathToGame)) {
                 gameData = gameFile.ReadLine();
 
                 // Read a row of numbers from the file and count how many numbers there are. That's how many columns and rows the game will have.
@@ -512,10 +522,14 @@ namespace Assign5 {
         private void buttonSave_Click(object sender, EventArgs e) {
             int columnCounter = 0;
 
-            if (!(new FileInfo("../../../Saves/" + fileName)).Exists) {
-                (new FileInfo("../../../Saves/" + fileName)).Directory.Create();
-            } 
+            string[] fileStuff = fileName.Split('/');
 
+            Console.WriteLine(fileStuff[0]);
+
+            if (!(new FileInfo("../../../Saves/" + fileStuff[0] + "/")).Exists) {
+                (new FileInfo("../../../Saves/" + fileStuff[0] + "/")).Directory.Create();
+            }
+            
             using (StreamWriter saveFile = new StreamWriter("../../../Saves/" + fileName)) {
                 foreach (int value in gameMatrix) {
                     if (columnCounter == numColumns) {
