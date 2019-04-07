@@ -31,7 +31,10 @@
             this.radioButtonMedium = new System.Windows.Forms.RadioButton();
             this.radioButtonEasy = new System.Windows.Forms.RadioButton();
             this.buttonSave = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.labelTimer = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // comboBoxGame
@@ -56,11 +59,12 @@
             // 
             // buttonStart
             // 
-            this.buttonStart.Location = new System.Drawing.Point(12, 160);
+            this.buttonStart.ForeColor = System.Drawing.Color.Black;
+            this.buttonStart.Location = new System.Drawing.Point(14, 62);
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(75, 23);
             this.buttonStart.TabIndex = 2;
-            this.buttonStart.Text = "Start!";
+            this.buttonStart.Text = "Start";
             this.buttonStart.UseVisualStyleBackColor = true;
             this.buttonStart.Click += new System.EventHandler(this.button1_Start);
             // 
@@ -119,7 +123,7 @@
             // buttonSave
             // 
             this.buttonSave.Enabled = false;
-            this.buttonSave.Location = new System.Drawing.Point(12, 205);
+            this.buttonSave.Location = new System.Drawing.Point(462, 464);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(75, 23);
             this.buttonSave.TabIndex = 4;
@@ -127,15 +131,37 @@
             this.buttonSave.UseVisualStyleBackColor = true;
             this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.labelTimer);
+            this.groupBox2.Controls.Add(this.buttonStart);
+            this.groupBox2.ForeColor = System.Drawing.Color.White;
+            this.groupBox2.Location = new System.Drawing.Point(12, 171);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(107, 100);
+            this.groupBox2.TabIndex = 6;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Timer";
+            // 
+            // labelTimer
+            // 
+            this.labelTimer.AutoSize = true;
+            this.labelTimer.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTimer.Location = new System.Drawing.Point(10, 16);
+            this.labelTimer.Name = "labelTimer";
+            this.labelTimer.Size = new System.Drawing.Size(88, 24);
+            this.labelTimer.TabIndex = 6;
+            this.labelTimer.Text = "00:00:00";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(760, 499);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.buttonSave);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.buttonStart);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBoxGame);
             this.Name = "Form1";
@@ -143,6 +169,8 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -158,6 +186,8 @@
         private System.Windows.Forms.RadioButton radioButtonMedium;
         private System.Windows.Forms.RadioButton radioButtonEasy;
         private System.Windows.Forms.Button buttonSave;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label labelTimer;
     }
 }
 
