@@ -61,7 +61,7 @@
             // buttonStart
             // 
             this.buttonStart.ForeColor = System.Drawing.Color.Black;
-            this.buttonStart.Location = new System.Drawing.Point(14, 62);
+            this.buttonStart.Location = new System.Drawing.Point(12, 170);
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(75, 23);
             this.buttonStart.TabIndex = 2;
@@ -134,10 +134,10 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.buttonPause);
             this.groupBox2.Controls.Add(this.labelTimer);
-            this.groupBox2.Controls.Add(this.buttonStart);
             this.groupBox2.ForeColor = System.Drawing.Color.White;
-            this.groupBox2.Location = new System.Drawing.Point(12, 171);
+            this.groupBox2.Location = new System.Drawing.Point(12, 213);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(107, 100);
             this.groupBox2.TabIndex = 6;
@@ -157,7 +157,7 @@
             // buttonPause
             // 
             this.buttonPause.ForeColor = System.Drawing.Color.Black;
-            this.buttonPause.Location = new System.Drawing.Point(26, 292);
+            this.buttonPause.Location = new System.Drawing.Point(14, 57);
             this.buttonPause.Name = "buttonPause";
             this.buttonPause.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.buttonPause.Size = new System.Drawing.Size(75, 23);
@@ -172,7 +172,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(760, 499);
-            this.Controls.Add(this.buttonPause);
+            this.Controls.Add(this.buttonStart);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.buttonSave);
             this.Controls.Add(this.groupBox1);

@@ -30,6 +30,8 @@ namespace Assign5 {
 
         bool gameIsGoing = false;
         static int seconds = 0;
+        static int minutes = 0;
+        static int hours = 0;
 
         bool savedGame = false;
 
@@ -465,11 +467,23 @@ namespace Assign5 {
             }
         }
 
-        private static void MyTimedEvent(object source, ElapsedEventArgs args) {
+        private void MyTimedEvent(object source, ElapsedEventArgs args) {
             //System.Timers.Timer timer = (System.Timers.Timer)source;
             seconds += 1;
-            
-            Console.WriteLine("Timer: {0}", seconds);
+
+            if (seconds == 60) {
+                minutes++;
+                seconds = 0;
+            }
+
+            if (minutes == 60) {
+                hours++;
+                minutes = 0;
+            }
+
+            string timerElapsed = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+
+            labelTimer.Text = timerElapsed;
         } 
 
         private void endTimer() {
