@@ -14,6 +14,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Timers;
 using System.Windows.Forms;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -393,6 +395,8 @@ namespace Assign5 {
 
                 leftSumsY += textBoxes[0].Height - 1;
             }
+
+            beginTimer();
         }
 
         private void drawSolutionLabels() {
@@ -442,6 +446,18 @@ namespace Assign5 {
 
                 leftSumsYAnswer += textBoxes[0].Height - 1;
             }
+        }
+
+        private void beginTimer() {
+            using (System.Timers.Timer timer = new System.Timers.Timer(1000)) {
+                timer.AutoReset = true;
+                timer.Elapsed += MyTimedEvent;                
+                timer.Enabled = true;
+            } 
+        }
+
+        private static void MyTimedEvent(object source, ElapsedEventArgs args) {
+            Console.WriteLine();
         }
 
         private void radioButtonEasy_CheckedChanged(object sender, EventArgs e) {
