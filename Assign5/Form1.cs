@@ -24,10 +24,12 @@ namespace Assign5 {
     public partial class Form1 : Form {
         string gameData;
         int numColumns;
-
         Dictionary<string, string> difficultyOptions = new Dictionary<string, string>();    // Holds game difficulty options for Difficulty dropdown menu.
         string fileName;
         string pathToGame;
+
+        bool gameIsGoing = false;
+        static int seconds = 0;
 
         bool savedGame = false;
 
@@ -396,7 +398,9 @@ namespace Assign5 {
                 leftSumsY += textBoxes[0].Height - 1;
             }
 
-            beginTimer();
+            System.Threading.Thread worker = new System.Threading.Thread(beginTimer);
+
+            worker.Start();
         }
 
         private void drawSolutionLabels() {
@@ -449,15 +453,29 @@ namespace Assign5 {
         }
 
         private void beginTimer() {
+            gameIsGoing = true;
+
             using (System.Timers.Timer timer = new System.Timers.Timer(1000)) {
                 timer.AutoReset = true;
-                timer.Elapsed += MyTimedEvent;                
+                timer.Elapsed += MyTimedEvent;
                 timer.Enabled = true;
-            } 
+
+                // While there is a game in progress, continue timing the player.
+                while (gameIsGoing);
+            }
         }
 
         private static void MyTimedEvent(object source, ElapsedEventArgs args) {
-            Console.WriteLine();
+            //System.Timers.Timer timer = (System.Timers.Timer)source;
+            seconds += 1;
+            
+            Console.WriteLine("Timer: {0}", seconds);
+        } 
+
+        private void endTimer() {
+            gameIsGoing = false;
+
+            Console.WriteLine("Timer ended.");
         }
 
         private void radioButtonEasy_CheckedChanged(object sender, EventArgs e) {
@@ -658,6 +676,11 @@ namespace Assign5 {
                     columnCounter++;
                 }
             }
+        }
+
+        private void buttonPause_Click(object sender, EventArgs e)
+        {
+            endTimer();
         }
     }
 

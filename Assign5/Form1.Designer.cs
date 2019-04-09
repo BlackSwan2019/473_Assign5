@@ -33,6 +33,7 @@
             this.buttonSave = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.labelTimer = new System.Windows.Forms.Label();
+            this.buttonPause = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -153,12 +154,25 @@
             this.labelTimer.TabIndex = 6;
             this.labelTimer.Text = "00:00:00";
             // 
+            // buttonPause
+            // 
+            this.buttonPause.ForeColor = System.Drawing.Color.Black;
+            this.buttonPause.Location = new System.Drawing.Point(26, 292);
+            this.buttonPause.Name = "buttonPause";
+            this.buttonPause.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.buttonPause.Size = new System.Drawing.Size(75, 23);
+            this.buttonPause.TabIndex = 7;
+            this.buttonPause.Text = "Pause";
+            this.buttonPause.UseVisualStyleBackColor = true;
+            this.buttonPause.Click += new System.EventHandler(this.buttonPause_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(760, 499);
+            this.Controls.Add(this.buttonPause);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.buttonSave);
             this.Controls.Add(this.groupBox1);
@@ -188,6 +202,7 @@
         private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label labelTimer;
+        private System.Windows.Forms.Button buttonPause;
     }
 }
 
