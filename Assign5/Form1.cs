@@ -28,6 +28,7 @@ namespace Assign5 {
         string fileName;
         string pathToGame;
 
+        System.Timers.Timer timer = new System.Timers.Timer(1000);
         bool gameIsGoing = false;
         static int seconds = 0;
         static int minutes = 0;
@@ -96,7 +97,6 @@ namespace Assign5 {
             }
 
             using (var gameFile = new StreamReader(pathToGame)) {
-                Console.WriteLine("LINE: " + gameFile);
                 gameData = gameFile.ReadLine();
 
                 // Read a row of numbers from the file and count how many numbers there are. That's how many columns and rows the game will have.
@@ -209,6 +209,14 @@ namespace Assign5 {
 
                     if (row == numColumns)
                         break;
+                }
+
+                while ((gameData = gameFile.ReadLine()) != null) {
+                    if (gameData.Length == 0) {
+                        continue;
+                    }
+
+                    Console.WriteLine("Saved time: " + gameData);
                 }
 
                 row = 0;
@@ -400,9 +408,7 @@ namespace Assign5 {
                 leftSumsY += textBoxes[0].Height - 1;
             }
 
-            System.Threading.Thread worker = new System.Threading.Thread(beginTimer);
-
-            worker.Start();
+            beginTimer();
         }
 
         private void drawSolutionLabels() {
@@ -457,14 +463,10 @@ namespace Assign5 {
         private void beginTimer() {
             gameIsGoing = true;
 
-            using (System.Timers.Timer timer = new System.Timers.Timer(1000)) {
-                timer.AutoReset = true;
-                timer.Elapsed += MyTimedEvent;
-                timer.Enabled = true;
-
-                // While there is a game in progress, continue timing the player.
-                while (gameIsGoing);
-            }
+            timer.AutoReset = true;
+            timer.Elapsed += MyTimedEvent;
+            timer.Enabled = true;
+            timer.Start();
         }
 
         private void MyTimedEvent(object source, ElapsedEventArgs args) {
@@ -484,12 +486,24 @@ namespace Assign5 {
             string timerElapsed = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
 
             labelTimer.Text = timerElapsed;
-        } 
+        }
 
-        private void endTimer() {
-            gameIsGoing = false;
+        private void buttonPause_Click(object sender, EventArgs e)
+        {
+            if (gameIsGoing) {
+                gameIsGoing = false;
 
-            Console.WriteLine("Timer ended.");
+                buttonPause.Text = "Resume";
+
+                timer.Stop();
+
+            } else {
+                gameIsGoing = true;
+
+                buttonPause.Text = "Pause";
+
+                timer.Start();
+            }
         }
 
         private void radioButtonEasy_CheckedChanged(object sender, EventArgs e) {
@@ -689,12 +703,10 @@ namespace Assign5 {
 
                     columnCounter++;
                 }
-            }
-        }
 
-        private void buttonPause_Click(object sender, EventArgs e)
-        {
-            endTimer();
+                // Save game's elapsed time timestamp.
+                saveFile.Write("\n\n#" + labelTimer.Text);
+            }
         }
     }
 
