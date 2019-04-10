@@ -76,7 +76,9 @@ namespace Assign5 {
             int row = 0;
 
             buttonSave.Enabled = true;
+            buttonHelp.Enabled = true;
             savedGame = false;
+            richTextMessages.Clear();
 
             // If there are textBoxes from last session, remove them.
             if (textBoxes != null) {
@@ -730,6 +732,8 @@ namespace Assign5 {
             if (gameComplete()) {
                 timer.Stop();
 
+                buttonHelp.Enabled = false;
+
                 richTextMessages.Text = "You win! Your time was " + labelTimer.Text;
             }
         }
@@ -965,8 +969,8 @@ namespace Assign5 {
                     // Update game model with the added solution value for that cell.
                     gameMatrix[row, col] = solutionMatrix[row, col];
 
-                    // Find which text box put the solution value.
-                    textBoxIndex = (row + 1) * (col);
+                    // Find which text box to put the solution value.
+                    textBoxIndex = row * numColumns + col;
 
                     // Set text box value.
                     textBoxes[textBoxIndex].Text = solutionMatrix[row, col].ToString();
