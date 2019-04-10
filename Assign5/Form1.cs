@@ -295,6 +295,11 @@ namespace Assign5 {
                     }
                 }
             }
+
+            // Add up right diagonal from solution matrix.
+            for (int r = 0, c = numColumns - 1; r < numColumns && c >= 0; r++, c--) {
+                        summationRightDiagAnswer += solutionMatrix[r, c];
+            }
         }
 
         private void drawGame() {
@@ -476,6 +481,28 @@ namespace Assign5 {
 
             Controls.Add(sumsLeftDiag);
 
+            // Place right diagonal sum label.
+            sumsRightDiag = new Label();
+
+            int rightDiagX = 680;
+            int rightDiagY = 28;
+
+            // Add up left diagonal values.
+            for (int r = 0, c = numColumns - 1; r < numColumns && c >= 0; r++, c--) {
+                summationRightDiag += gameMatrix[r, c];
+            }
+
+            sumsRightDiag.Text = summationRightDiag.ToString();
+
+            sumsRightDiag.ForeColor = Color.White;
+            sumsRightDiag.Height = 30;
+            sumsRightDiag.Width = 30;
+            sumsRightDiag.Location = new Point(rightDiagX, rightDiagY);
+            sumsRightDiag.Font = new Font(sumsRightDiag.Font.FontFamily, 12);
+            sumsRightDiag.TextAlign = ContentAlignment.MiddleCenter;
+
+            Controls.Add(sumsRightDiag);
+
             beginTimer();
         }
 
@@ -535,7 +562,23 @@ namespace Assign5 {
                 sumsLeftDiagAnswer.Font = new Font(sumsLeftDiagAnswer.Font.FontFamily, 12);
                 sumsLeftDiagAnswer.TextAlign = ContentAlignment.MiddleCenter;
                 Controls.Add(sumsLeftDiagAnswer);
-                topXAnswer += textBoxes[0].Width - 1;
+            }
+
+            // Beginning coordinates of first top label.
+            int rightDiagX = 700;
+            int rightDiagY = 0;
+
+            // Draw sum labels across the top of the play field.
+            for (int i = 0; i < numColumns; i++) {
+                sumsRightDiagAnswer = new Label();
+                sumsRightDiagAnswer.Text = "(" + summationRightDiagAnswer.ToString() + ")";
+                sumsRightDiagAnswer.ForeColor = Color.White;
+                sumsRightDiagAnswer.Height = 35;
+                sumsRightDiagAnswer.Width = 40;
+                sumsRightDiagAnswer.Location = new Point(rightDiagX, rightDiagY);
+                sumsRightDiagAnswer.Font = new Font(sumsRightDiagAnswer.Font.FontFamily, 12);
+                sumsRightDiagAnswer.TextAlign = ContentAlignment.MiddleCenter;
+                Controls.Add(sumsRightDiagAnswer);
             }
         }
 
@@ -664,6 +707,8 @@ namespace Assign5 {
                 // Reset the label value.
                 summationX[i] = 0;
                 summationY[i] = 0;
+                summationLeftDiag = 0;
+                summationRightDiag = 0;
 
                 // Add up column values.
                 for (int r = 0; r < numColumns; r++) {
@@ -687,6 +732,24 @@ namespace Assign5 {
 
                 sumsY[i].Text = summationY[i].ToString();
 
+                // Add up left diagonal values.
+                for (int c = 0; c < numColumns; c++) {
+                    for (int r = 0; r < numColumns; r++) {
+                        if (r == c) {
+                            summationLeftDiag += gameMatrix[r, c];
+                        }
+                    }
+                }
+
+                sumsLeftDiag.Text = summationLeftDiag.ToString();
+
+                // Add up right diagonal values.
+                for (int r = 0, c = numColumns - 1; r < numColumns && c >= 0; r++, c--) {
+                    summationRightDiag += gameMatrix[r, c];
+                }
+
+                sumsRightDiag.Text = summationRightDiag.ToString();
+
                 // Check if sum of row or column has reached the solution sum. If they are under the solution value,
                 // keep label white. If they are same as solution value, turn label green. If they overshoot solution
                 // value or finish a row or column but sum is still wrong, turn label red.
@@ -704,6 +767,22 @@ namespace Assign5 {
                     sumsY[i].ForeColor = Color.Red;
                 } else {
                     sumsY[i].ForeColor = Color.White;
+                }
+
+                if (summationLeftDiag == summationLeftDiagAnswer) {
+                    sumsLeftDiag.ForeColor = Color.FromArgb(51, 204, 51);
+                } else if (summationLeftDiag > summationLeftDiagAnswer || (leftDiagFilled(gameMatrix) && summationLeftDiag != summationLeftDiagAnswer)) {
+                    sumsLeftDiag.ForeColor = Color.Red;
+                } else {
+                    sumsLeftDiag.ForeColor = Color.White;
+                }
+
+                if (summationRightDiag == summationRightDiagAnswer) {
+                    sumsRightDiag.ForeColor = Color.FromArgb(51, 204, 51);
+                } else if (summationRightDiag > summationRightDiagAnswer || (rightDiagFilled(gameMatrix) && summationRightDiag != summationRightDiagAnswer)) {
+                    sumsRightDiag.ForeColor = Color.Red;
+                } else {
+                    sumsRightDiag.ForeColor = Color.White;
                 }
             }
         }
@@ -723,6 +802,30 @@ namespace Assign5 {
             // If there are any unfilled cells in the row, return false.
             for (int r = 0; r < numColumns; r++) {
                 if (gameMatrix[r, column] == 0) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private bool leftDiagFilled(int[,] matrix) {
+            // If there are any unfilled cells in the row, return false.
+            for (int r = 0; r < numColumns; r++) {
+                for (int c = 0; c < numColumns; c++) {
+                    if (r == c && gameMatrix[r, c] == 0) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        private bool rightDiagFilled(int[,] matrix) {
+            // If there are any unfilled cells in the row, return false.
+            for (int r = 0, c = numColumns - 1; r < numColumns && c >= 0; r++, c--) {
+                if (gameMatrix[r, c] == 0) {
                     return false;
                 }
             }
