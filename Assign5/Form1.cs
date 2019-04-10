@@ -328,7 +328,14 @@ namespace Assign5 {
 
             int row = 0;
             int col = 0;
-            
+
+            // If there are textBoxes from last session, remove them.
+            if (textBoxes != null) {
+                for (int i = 0; i < numColumns * numColumns; i++) {
+                    Controls.Remove(textBoxes[i]);
+                }
+            }
+
             for (int i = 0; i < numColumns * numColumns; i++) {
                 // If we drew out the amount of columns we need, drop to new row.
                 if (i % numColumns == 0 && i > 0) {
@@ -373,6 +380,7 @@ namespace Assign5 {
                         if (gameMatrix[row, col] == 0) {
                             textBoxes[i].Text = "";
                         } else {
+                            Console.WriteLine("CELL #" + i + " with value of " + gameMatrix[row, col]);
                             textBoxes[i].Text = gameMatrix[row, col].ToString();
                         }
                     } else { // Else, if user never put a value in there, leave it blank.
@@ -939,16 +947,34 @@ namespace Assign5 {
 
         private void buttonHelp_Click(object sender, EventArgs e) {
             bool foundUnfilledCell = false;
-            int row, col;
+            Random rand;
 
-     // while (!foundUnfilledCell) {
-     //     row = new Random(numColumns);
-     //
-     //     // Find random cell and see if it is blank.
-     //     if (gameMatrix[RandomNumber(0, numColumns), ]) {
-     //
-     //     }
-     // }
+            int row, col;
+            int textBoxIndex;
+
+            while (!foundUnfilledCell) {
+                rand = new Random();
+
+                row = rand.Next(0, numColumns);
+                col = rand.Next(0, numColumns);
+
+                Console.WriteLine("gameMatrix[" + row + ", " + col + "]");
+
+                // Find random cell and see if it is blank.
+                if (gameMatrix[row, col] == 0) {
+                    // Update game model with the added solution value for that cell.
+                    gameMatrix[row, col] = solutionMatrix[row, col];
+
+                    // Find which text box put the solution value.
+                    textBoxIndex = (row + 1) * (col);
+
+                    // Set text box value.
+                    textBoxes[textBoxIndex].Text = solutionMatrix[row, col].ToString();
+
+                    // We did find a cell and deal with it, so flip this flag to true.
+                    foundUnfilledCell = true;
+                }
+            }
         }
     }
 
