@@ -30,9 +30,9 @@ namespace Assign5 {
 
         System.Timers.Timer timer = new System.Timers.Timer(1000);
         bool gameIsGoing = false;
-        static int seconds = 0;
-        static int minutes = 0;
         static int hours = 0;
+        static int minutes = 0;
+        static int seconds = 0;
 
         bool savedGame = false;
 
@@ -40,13 +40,22 @@ namespace Assign5 {
 
         Label[] sumsX;
         Label[] sumsY;
+        Label sumsLeftDiag;
+        Label sumsRightDiag;
+
         Label[] sumsXAnswer;
         Label[] sumsYAnswer;
+        Label sumsLeftDiagAnswer;
+        Label sumsRightDiagAnswer;
 
         int[] summationX;
         int[] summationY;
+        int summationLeftDiag;
+        int summationRightDiag;
         int[] summationXAnswer;
         int[] summationYAnswer;
+        int summationLeftDiagAnswer;
+        int summationRightDiagAnswer;
 
         [DllImport("user32.dll")]
         static extern bool HideCaret(System.IntPtr hWnd);
@@ -92,8 +101,23 @@ namespace Assign5 {
             if ((new FileInfo("../../../Saves/" + fileName)).Exists) {
                 pathToGame = "../../../Saves/" + fileName;
                 savedGame = true;
+
+                // Strip off old tick event.
+                timer.Elapsed -= MyTimedEvent;
             } else {
                 pathToGame = "../../../Resources/" + fileName;
+
+                // It is a new game, so start timer at 0 seconds.
+                hours = 0;
+                minutes = 0;
+                seconds = 0;
+
+                // Strip off old tick event.
+                timer.Elapsed -= MyTimedEvent;
+
+                string timerElapsed = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+
+                labelTimer.Text = timerElapsed;
             }
 
             using (var gameFile = new StreamReader(pathToGame)) {
@@ -216,7 +240,16 @@ namespace Assign5 {
                         continue;
                     }
 
-                    Console.WriteLine("Saved time: " + gameData);
+                    // Tokenize timer string.
+                    string[] timestamp = gameData.Split(':');
+
+                    hours = Convert.ToInt32(timestamp[0]);
+                    minutes = Convert.ToInt32(timestamp[1]);
+                    seconds = Convert.ToInt32(timestamp[2]);
+
+                    string timerElapsed = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+
+                    labelTimer.Text = timerElapsed;
                 }
 
                 row = 0;
@@ -250,6 +283,15 @@ namespace Assign5 {
                         if (r == i) {
                             summationYAnswer[i] += solutionMatrix[r, c];
                         }
+                    }
+                }
+            }
+
+            // Add up left diagonal from solution matrix.
+            for (int r = 0; r < numColumns; r++) {
+                for (int c = 0; c < numColumns; c++) {
+                    if (c == r) {
+                        summationLeftDiagAnswer += solutionMatrix[r, c];
                     }
                 }
             }
@@ -408,12 +450,39 @@ namespace Assign5 {
                 leftSumsY += textBoxes[0].Height - 1;
             }
 
+            // Place left diagonal sum label.
+            sumsLeftDiag = new Label();
+            
+            int leftDiagX = 270;
+            int leftDiagY = 28;
+
+            // Add up left diagonal values.
+            for (int c = 0; c < numColumns; c++) {
+                for (int r = 0; r < numColumns; r++) {
+                    if (c == r) {
+                        summationLeftDiag += gameMatrix[r, c];
+                    }
+                }
+            }
+
+            sumsLeftDiag.Text = summationLeftDiag.ToString();
+            
+            sumsLeftDiag.ForeColor = Color.White;
+            sumsLeftDiag.Height = 30;
+            sumsLeftDiag.Width = 30;
+            sumsLeftDiag.Location = new Point(leftDiagX, leftDiagY);
+            sumsLeftDiag.Font = new Font(sumsLeftDiag.Font.FontFamily, 12);
+            sumsLeftDiag.TextAlign = ContentAlignment.MiddleCenter;
+
+            Controls.Add(sumsLeftDiag);
+
             beginTimer();
         }
 
         private void drawSolutionLabels() {
             sumsXAnswer = new Label[numColumns];
             sumsYAnswer = new Label[numColumns];
+            sumsLeftDiag = new Label();
 
             // Beginning coordinates of first top label.
             int topXAnswer = 295 + (textBoxes[0].Width / 2) - 10;
@@ -422,18 +491,14 @@ namespace Assign5 {
             // Draw sum labels across the top of the play field.
             for (int i = 0; i < numColumns; i++) {
                 sumsXAnswer[i] = new Label();
-
                 sumsXAnswer[i].Text = "(" + summationXAnswer[i].ToString() + ")";
-
                 sumsXAnswer[i].ForeColor = Color.White;
                 sumsXAnswer[i].Height = 35;
                 sumsXAnswer[i].Width = 40;
                 sumsXAnswer[i].Location = new Point(topXAnswer, topYAnswer);
                 sumsXAnswer[i].Font = new Font(sumsXAnswer[i].Font.FontFamily, 12);
                 sumsXAnswer[i].TextAlign = ContentAlignment.MiddleCenter;
-
                 Controls.Add(sumsXAnswer[i]);
-
                 topXAnswer += textBoxes[0].Width - 1;
             }
 
@@ -444,19 +509,33 @@ namespace Assign5 {
             // Draw sum labels down the left side the play field.
             for (int i = 0; i < numColumns; i++) {
                 sumsYAnswer[i] = new Label();
-
                 sumsYAnswer[i].Text = "(" + summationYAnswer[i].ToString() + ")";
-
                 sumsYAnswer[i].ForeColor = Color.White;
                 sumsYAnswer[i].Height = 35;
                 sumsYAnswer[i].Width = 40;
                 sumsYAnswer[i].Location = new Point(leftSumsXAnswer, leftSumsYAnswer);
                 sumsYAnswer[i].Font = new Font(sumsYAnswer[i].Font.FontFamily, 12);
                 sumsYAnswer[i].TextAlign = ContentAlignment.MiddleCenter;
-
                 Controls.Add(sumsYAnswer[i]);
-
                 leftSumsYAnswer += textBoxes[0].Height - 1;
+            }
+
+            // Beginning coordinates of first top label.
+            int leftDiagX = 235;
+            int leftDiagY = 0;
+
+            // Draw sum labels across the top of the play field.
+            for (int i = 0; i < numColumns; i++) {
+                sumsLeftDiagAnswer = new Label();
+                sumsLeftDiagAnswer.Text = "(" + summationLeftDiagAnswer.ToString() + ")";
+                sumsLeftDiagAnswer.ForeColor = Color.White;
+                sumsLeftDiagAnswer.Height = 35;
+                sumsLeftDiagAnswer.Width = 40;
+                sumsLeftDiagAnswer.Location = new Point(leftDiagX, leftDiagY);
+                sumsLeftDiagAnswer.Font = new Font(sumsLeftDiagAnswer.Font.FontFamily, 12);
+                sumsLeftDiagAnswer.TextAlign = ContentAlignment.MiddleCenter;
+                Controls.Add(sumsLeftDiagAnswer);
+                topXAnswer += textBoxes[0].Width - 1;
             }
         }
 
@@ -705,7 +784,7 @@ namespace Assign5 {
                 }
 
                 // Save game's elapsed time timestamp.
-                saveFile.Write("\n\n#" + labelTimer.Text);
+                saveFile.Write("\n\n" + labelTimer.Text);
             }
         }
     }
