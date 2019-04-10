@@ -92,6 +92,10 @@ namespace Assign5 {
                     Controls.Remove(sumsY[i]);
                     Controls.Remove(sumsXAnswer[i]);
                     Controls.Remove(sumsYAnswer[i]);
+                    Controls.Remove(sumsRightDiag);
+                    Controls.Remove(sumsLeftDiag);
+                    Controls.Remove(sumsLeftDiagAnswer);
+                    Controls.Remove(sumsRightDiagAnswer);
                 }
             }
 
@@ -771,7 +775,7 @@ namespace Assign5 {
 
                 if (summationLeftDiag == summationLeftDiagAnswer) {
                     sumsLeftDiag.ForeColor = Color.FromArgb(51, 204, 51);
-                } else if (summationLeftDiag > summationLeftDiagAnswer || (leftDiagFilled(gameMatrix) && summationLeftDiag != summationLeftDiagAnswer)) {
+                } else if (summationLeftDiag > summationLeftDiagAnswer || ((leftDiagFilled(gameMatrix) && summationLeftDiag != summationLeftDiagAnswer))) {
                     sumsLeftDiag.ForeColor = Color.Red;
                 } else {
                     sumsLeftDiag.ForeColor = Color.White;
@@ -779,11 +783,15 @@ namespace Assign5 {
 
                 if (summationRightDiag == summationRightDiagAnswer) {
                     sumsRightDiag.ForeColor = Color.FromArgb(51, 204, 51);
-                } else if (summationRightDiag > summationRightDiagAnswer || (rightDiagFilled(gameMatrix) && summationRightDiag != summationRightDiagAnswer)) {
+                } else if (summationRightDiag > summationRightDiagAnswer || ((rightDiagFilled(gameMatrix) && summationRightDiag != summationRightDiagAnswer))) {
                     sumsRightDiag.ForeColor = Color.Red;
                 } else {
                     sumsRightDiag.ForeColor = Color.White;
                 }
+            }
+
+            if (gameComplete()) {
+                Console.WriteLine("YOU WON!");
             }
         }
 
@@ -889,6 +897,26 @@ namespace Assign5 {
                 // Save game's elapsed time timestamp.
                 saveFile.Write("\n\n" + labelTimer.Text);
             }
+        }
+
+        private bool gameComplete() {
+            foreach (Label l in sumsX) {
+                if (l.ForeColor != Color.FromArgb(51, 204, 51)) {
+                    return false;  
+                }
+            }
+
+            foreach (Label l in sumsY) {
+                if (l.ForeColor != Color.FromArgb(51, 204, 51)) {
+                    return false;
+                }
+            }
+
+            if (sumsLeftDiag.ForeColor != Color.FromArgb(51, 204, 51) || sumsRightDiag.ForeColor != Color.FromArgb(51, 204, 51)) {
+                return false;
+            }
+
+            return true;
         }
     }
 
