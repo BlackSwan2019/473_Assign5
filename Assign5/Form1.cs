@@ -267,6 +267,9 @@ namespace Assign5 {
             summationXAnswer = new int[numColumns];
             summationYAnswer = new int[numColumns];
 
+            summationLeftDiagAnswer = 0;
+            summationRightDiagAnswer = 0;
+
             // Draw sum labels across the top of the play field.
             for (int i = 0; i < numColumns; i++) {
                 // Add up column values.
@@ -302,7 +305,7 @@ namespace Assign5 {
 
             // Add up right diagonal from solution matrix.
             for (int r = 0, c = numColumns - 1; r < numColumns && c >= 0; r++, c--) {
-                        summationRightDiagAnswer += solutionMatrix[r, c];
+                summationRightDiagAnswer += solutionMatrix[r, c];
             }
         }
 
@@ -314,6 +317,9 @@ namespace Assign5 {
 
             summationX = new int[numColumns];
             summationY = new int[numColumns];
+
+            summationLeftDiag = 0;
+            summationRightDiag = 0;
 
             rowColTag rowCol;
 
@@ -506,6 +512,10 @@ namespace Assign5 {
             sumsRightDiag.TextAlign = ContentAlignment.MiddleCenter;
 
             Controls.Add(sumsRightDiag);
+
+            if (savedGame) {
+                setLabelColors();
+            }
 
             beginTimer();
         }
@@ -707,6 +717,16 @@ namespace Assign5 {
                 gameMatrix[rowCol.row, rowCol.col] = Convert.ToInt32(cell.Text);
             }
 
+            setLabelColors();
+
+            if (gameComplete()) {
+                timer.Stop();
+
+                richTextMessages.Text = "You win! Your time was " + labelTimer.Text;
+            }
+        }
+
+        private void setLabelColors() {
             for (int i = 0; i < numColumns; i++) {
                 // Reset the label value.
                 summationX[i] = 0;
@@ -775,7 +795,7 @@ namespace Assign5 {
 
                 if (summationLeftDiag == summationLeftDiagAnswer) {
                     sumsLeftDiag.ForeColor = Color.FromArgb(51, 204, 51);
-                } else if (summationLeftDiag > summationLeftDiagAnswer || ((leftDiagFilled(gameMatrix) && summationLeftDiag != summationLeftDiagAnswer))) {
+                } else if (summationLeftDiag > summationLeftDiagAnswer || (leftDiagFilled(gameMatrix) && (summationLeftDiag != summationLeftDiagAnswer))) {
                     sumsLeftDiag.ForeColor = Color.Red;
                 } else {
                     sumsLeftDiag.ForeColor = Color.White;
@@ -783,15 +803,13 @@ namespace Assign5 {
 
                 if (summationRightDiag == summationRightDiagAnswer) {
                     sumsRightDiag.ForeColor = Color.FromArgb(51, 204, 51);
-                } else if (summationRightDiag > summationRightDiagAnswer || ((rightDiagFilled(gameMatrix) && summationRightDiag != summationRightDiagAnswer))) {
+                } else if (summationRightDiag > summationRightDiagAnswer || (rightDiagFilled(gameMatrix) && (summationRightDiag != summationRightDiagAnswer))) {
+                    Console.WriteLine("Right Diag Sum" + summationRightDiag + " vs Answer of " + summationRightDiagAnswer);
+                    Console.WriteLine("Right Diag Filled? " + rightDiagFilled(gameMatrix));
                     sumsRightDiag.ForeColor = Color.Red;
                 } else {
                     sumsRightDiag.ForeColor = Color.White;
                 }
-            }
-
-            if (gameComplete()) {
-                Console.WriteLine("YOU WON!");
             }
         }
 
@@ -917,6 +935,20 @@ namespace Assign5 {
             }
 
             return true;
+        }
+
+        private void buttonHelp_Click(object sender, EventArgs e) {
+            bool foundUnfilledCell = false;
+            int row, col;
+
+     // while (!foundUnfilledCell) {
+     //     row = new Random(numColumns);
+     //
+     //     // Find random cell and see if it is blank.
+     //     if (gameMatrix[RandomNumber(0, numColumns), ]) {
+     //
+     //     }
+     // }
         }
     }
 

@@ -32,8 +32,11 @@
             this.radioButtonEasy = new System.Windows.Forms.RadioButton();
             this.buttonSave = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.labelTimer = new System.Windows.Forms.Label();
             this.buttonPause = new System.Windows.Forms.Button();
+            this.labelTimer = new System.Windows.Forms.Label();
+            this.buttonHelp = new System.Windows.Forms.Button();
+            this.richTextMessages = new System.Windows.Forms.RichTextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -144,16 +147,6 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Timer";
             // 
-            // labelTimer
-            // 
-            this.labelTimer.AutoSize = true;
-            this.labelTimer.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTimer.Location = new System.Drawing.Point(10, 16);
-            this.labelTimer.Name = "labelTimer";
-            this.labelTimer.Size = new System.Drawing.Size(88, 24);
-            this.labelTimer.TabIndex = 6;
-            this.labelTimer.Text = "00:00:00";
-            // 
             // buttonPause
             // 
             this.buttonPause.ForeColor = System.Drawing.Color.Black;
@@ -166,12 +159,54 @@
             this.buttonPause.UseVisualStyleBackColor = true;
             this.buttonPause.Click += new System.EventHandler(this.buttonPause_Click);
             // 
+            // labelTimer
+            // 
+            this.labelTimer.AutoSize = true;
+            this.labelTimer.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTimer.Location = new System.Drawing.Point(10, 16);
+            this.labelTimer.Name = "labelTimer";
+            this.labelTimer.Size = new System.Drawing.Size(88, 24);
+            this.labelTimer.TabIndex = 6;
+            this.labelTimer.Text = "00:00:00";
+            // 
+            // buttonHelp
+            // 
+            this.buttonHelp.Location = new System.Drawing.Point(26, 343);
+            this.buttonHelp.Name = "buttonHelp";
+            this.buttonHelp.Size = new System.Drawing.Size(75, 23);
+            this.buttonHelp.TabIndex = 7;
+            this.buttonHelp.Text = "Help!";
+            this.buttonHelp.UseVisualStyleBackColor = true;
+            this.buttonHelp.Click += new System.EventHandler(this.buttonHelp_Click);
+            // 
+            // richTextMessages
+            // 
+            this.richTextMessages.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextMessages.Location = new System.Drawing.Point(12, 430);
+            this.richTextMessages.Name = "richTextMessages";
+            this.richTextMessages.Size = new System.Drawing.Size(195, 57);
+            this.richTextMessages.TabIndex = 8;
+            this.richTextMessages.Text = "";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Location = new System.Drawing.Point(12, 414);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(55, 13);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "Messages";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(760, 499);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.richTextMessages);
+            this.Controls.Add(this.buttonHelp);
             this.Controls.Add(this.buttonStart);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.buttonSave);
@@ -203,6 +238,9 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label labelTimer;
         private System.Windows.Forms.Button buttonPause;
+        private System.Windows.Forms.Button buttonHelp;
+        private System.Windows.Forms.RichTextBox richTextMessages;
+        private System.Windows.Forms.Label label2;
     }
 }
 
