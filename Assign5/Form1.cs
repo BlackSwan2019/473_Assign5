@@ -107,7 +107,7 @@ namespace Assign5 {
             if ((new FileInfo("../../../Saves/" + fileName)).Exists) {
                 pathToGame = "../../../Saves/" + fileName;
                 savedGame = true;
-
+            
                 // Strip off old tick event.
                 timer.Elapsed -= MyTimedEvent;
             } else {
@@ -411,7 +411,6 @@ namespace Assign5 {
                 col++;
             }
 
-            drawSolutionLabels();
 
             // Beginning coordinates of first top label.
             int topSumsX = 300 + (textBoxes[0].Width / 2) -  10;
@@ -527,13 +526,15 @@ namespace Assign5 {
                 setLabelColors();
             }
 
+            drawSolutionLabels();
+
             beginTimer();
         }
 
         private void drawSolutionLabels() {
             sumsXAnswer = new Label[numColumns];
             sumsYAnswer = new Label[numColumns];
-            sumsLeftDiag = new Label();
+            //sumsLeftDiag = new Label();
 
             // Beginning coordinates of first top label.
             int topXAnswer = 295 + (textBoxes[0].Width / 2) - 10;
@@ -575,35 +576,37 @@ namespace Assign5 {
             int leftDiagX = 235;
             int leftDiagY = 0;
 
+
             // Draw sum labels across the top of the play field.
-            for (int i = 0; i < numColumns; i++) {
-                sumsLeftDiagAnswer = new Label();
-                sumsLeftDiagAnswer.Text = "(" + summationLeftDiagAnswer.ToString() + ")";
-                sumsLeftDiagAnswer.ForeColor = Color.White;
-                sumsLeftDiagAnswer.Height = 35;
-                sumsLeftDiagAnswer.Width = 40;
-                sumsLeftDiagAnswer.Location = new Point(leftDiagX, leftDiagY);
-                sumsLeftDiagAnswer.Font = new Font(sumsLeftDiagAnswer.Font.FontFamily, 12);
-                sumsLeftDiagAnswer.TextAlign = ContentAlignment.MiddleCenter;
-                Controls.Add(sumsLeftDiagAnswer);
-            }
+            sumsLeftDiagAnswer = new Label();
+
+            sumsLeftDiagAnswer.Text = "(" + summationLeftDiagAnswer.ToString() + ")";
+
+            sumsLeftDiagAnswer.ForeColor = Color.White;
+            sumsLeftDiagAnswer.Height = 35;
+            sumsLeftDiagAnswer.Width = 40;
+            sumsLeftDiagAnswer.Location = new Point(leftDiagX, leftDiagY);
+            sumsLeftDiagAnswer.Font = new Font(sumsLeftDiagAnswer.Font.FontFamily, 12);
+            sumsLeftDiagAnswer.TextAlign = ContentAlignment.MiddleCenter;
+
+            Controls.Add(sumsLeftDiagAnswer);
 
             // Beginning coordinates of first top label.
             int rightDiagX = 700;
             int rightDiagY = 0;
 
             // Draw sum labels across the top of the play field.
-            for (int i = 0; i < numColumns; i++) {
-                sumsRightDiagAnswer = new Label();
-                sumsRightDiagAnswer.Text = "(" + summationRightDiagAnswer.ToString() + ")";
-                sumsRightDiagAnswer.ForeColor = Color.White;
-                sumsRightDiagAnswer.Height = 35;
-                sumsRightDiagAnswer.Width = 40;
-                sumsRightDiagAnswer.Location = new Point(rightDiagX, rightDiagY);
-                sumsRightDiagAnswer.Font = new Font(sumsRightDiagAnswer.Font.FontFamily, 12);
-                sumsRightDiagAnswer.TextAlign = ContentAlignment.MiddleCenter;
-                Controls.Add(sumsRightDiagAnswer);
-            }
+            sumsRightDiagAnswer = new Label();
+            sumsRightDiagAnswer.Text = "(" + summationRightDiagAnswer.ToString() + ")";
+            sumsRightDiagAnswer.ForeColor = Color.White;
+            sumsRightDiagAnswer.Height = 35;
+            sumsRightDiagAnswer.Width = 40;
+            sumsRightDiagAnswer.Location = new Point(rightDiagX, rightDiagY);
+            sumsRightDiagAnswer.Font = new Font(sumsRightDiagAnswer.Font.FontFamily, 12);
+            sumsRightDiagAnswer.TextAlign = ContentAlignment.MiddleCenter;
+
+            Controls.Add(sumsRightDiagAnswer);
+
         }
 
         private void beginTimer() {
