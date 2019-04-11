@@ -701,10 +701,6 @@ namespace Assign5 {
             HideCaret(textbox.Handle);
         }
 
-        public void divertFocus(object sender, EventArgs e) {
-            comboBoxGame.Focus();
-        }
-
         /*  
         *  Method:     valueChanged
         *  
