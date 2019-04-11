@@ -27,6 +27,8 @@ namespace Assign5 {
         Dictionary<string, string> difficultyOptions = new Dictionary<string, string>();    // Holds game difficulty options for Difficulty dropdown menu.
         string fileName;
         string pathToGame;
+        string completionTime;
+        List<string> completionTimes = new List<string>();
 
         System.Timers.Timer timer = new System.Timers.Timer(1000);
         bool gameIsGoing = false;
@@ -57,6 +59,8 @@ namespace Assign5 {
         int summationLeftDiagAnswer;
         int summationRightDiagAnswer;
 
+        PictureBox blind = new PictureBox();
+
         [DllImport("user32.dll")]
         static extern bool HideCaret(System.IntPtr hWnd);
 
@@ -77,6 +81,8 @@ namespace Assign5 {
 
             buttonSave.Enabled = true;
             buttonHelp.Enabled = true;
+            buttonHelp.Enabled = true;
+            buttonPause.Enabled = true;
             savedGame = false;
             richTextMessages.Clear();
 
@@ -160,10 +166,6 @@ namespace Assign5 {
 
                         if (row == numColumns)
                             break;
-                    }
-
-                    foreach (int val in initialMatrix) {
-                        Console.WriteLine(val);
                     }
                 }
 
@@ -258,6 +260,21 @@ namespace Assign5 {
                     labelTimer.Text = timerElapsed;
                 }
 
+                // If there are completed games for this play field, load the list of times for it.
+                if ((new FileInfo("../../../Completed/" + fileName)).Exists) {
+                    pathToGame = "../../../Completed/" + fileName;
+
+                    using (var completionTimesFile = new StreamReader(pathToGame)) {
+                        while ((completionTime = completionTimesFile.ReadLine()) != null) {
+                            completionTimes.Add(completionTime);
+                        }
+
+                        foreach (string s in completionTimes) {
+                            Console.WriteLine(s);
+                        }
+                    }
+                }
+
                 row = 0;
 
                 getAnswers();
@@ -341,7 +358,7 @@ namespace Assign5 {
             for (int i = 0; i < numColumns * numColumns; i++) {
                 // If we drew out the amount of columns we need, drop to new row.
                 if (i % numColumns == 0 && i > 0) {
-                    y += 385 / numColumns - 1;
+                    y += 385 / numColumns;
 
                     x = 300;
                     row++;
@@ -355,11 +372,11 @@ namespace Assign5 {
 
                 // Set cell font size according to cell size.
                 if (gameMatrix.Length == 9) {
-                    textBoxes[i].Font = new Font(textBoxes[i].Font.FontFamily, 60);
+                    textBoxes[i].Font = new Font(textBoxes[i].Font.FontFamily, 80);
                 } else if (gameMatrix.Length == 25) {
-                    textBoxes[i].Font = new Font(textBoxes[i].Font.FontFamily, 40);
+                    textBoxes[i].Font = new Font(textBoxes[i].Font.FontFamily, 50);
                 } else {
-                    textBoxes[i].Font = new Font(textBoxes[i].Font.FontFamily, 30);
+                    textBoxes[i].Font = new Font(textBoxes[i].Font.FontFamily, 35);
                 }
 
                 textBoxes[i].Location = new Point(x, y);
@@ -382,7 +399,6 @@ namespace Assign5 {
                         if (gameMatrix[row, col] == 0) {
                             textBoxes[i].Text = "";
                         } else {
-                            Console.WriteLine("CELL #" + i + " with value of " + gameMatrix[row, col]);
                             textBoxes[i].Text = gameMatrix[row, col].ToString();
                         }
                     } else { // Else, if user never put a value in there, leave it blank.
@@ -405,7 +421,7 @@ namespace Assign5 {
                 Controls.Add(textBoxes[i]);
 
                 // Shift right for next textBox placement.
-                x += 385 / numColumns - 1;
+                x += 385 / numColumns;
 
                 // Go to next column.
                 col++;
@@ -637,8 +653,13 @@ namespace Assign5 {
             labelTimer.Text = timerElapsed;
         }
 
-        private void buttonPause_Click(object sender, EventArgs e)
-        {
+        private void buttonPause_Click(object sender, EventArgs e) {
+            blind.Location = new Point(235, 0);
+            blind.Width = 500;
+            blind.Height = 500;
+            blind.BackColor = Color.Red;
+            blind.Paint += drawPauseMessage;
+
             if (gameIsGoing) {
                 gameIsGoing = false;
 
@@ -646,13 +667,36 @@ namespace Assign5 {
 
                 timer.Stop();
 
+                // Blank out playfield.
+                Controls.Add(blind);
+
+                blind.BringToFront();
+
             } else {
                 gameIsGoing = true;
 
                 buttonPause.Text = "Pause";
 
+                // Remove blind.
+                Controls.Remove(blind);
+
                 timer.Start();
             }
+        }
+
+        private void drawPauseMessage(object sender, PaintEventArgs e) {
+            // Create string to draw.
+            String drawString = "GAME PAUSED";
+
+            // Create font and brush.
+            Font drawFont = new Font("Arial", 16);
+            SolidBrush drawBrush = new SolidBrush(Color.White);
+
+            // Create point for upper-left corner of drawing.
+            float x = 170;
+            float y = 230.0F;
+
+            e.Graphics.DrawString(drawString, drawFont, drawBrush, x, y);
         }
 
         private void radioButtonEasy_CheckedChanged(object sender, EventArgs e) {
@@ -732,8 +776,24 @@ namespace Assign5 {
                 timer.Stop();
 
                 buttonHelp.Enabled = false;
+                buttonPause.Enabled = false;
+
+                foreach (TextBox textBox in textBoxes) {
+                    textBox.Enabled = false;
+                }
 
                 richTextMessages.Text = "You win! Your time was " + labelTimer.Text;
+
+                // Write out win time to file.
+                string[] fileStuff = fileName.Split('/');
+
+                if (!(new FileInfo("../../../Completed/" + fileStuff[0] + "/")).Exists) {
+                    (new FileInfo("../../../Completed/" + fileStuff[0] + "/")).Directory.Create();
+                }
+
+                using (StreamWriter saveFile = File.AppendText("../../../Completed/" + fileName)) {
+                    saveFile.WriteLine(labelTimer.Text);
+                }
             }
         }
 
@@ -815,8 +875,6 @@ namespace Assign5 {
                 if (summationRightDiag == summationRightDiagAnswer) {
                     sumsRightDiag.ForeColor = Color.FromArgb(51, 204, 51);
                 } else if (summationRightDiag > summationRightDiagAnswer || (rightDiagFilled(gameMatrix) && (summationRightDiag != summationRightDiagAnswer))) {
-                    Console.WriteLine("Right Diag Sum" + summationRightDiag + " vs Answer of " + summationRightDiagAnswer);
-                    Console.WriteLine("Right Diag Filled? " + rightDiagFilled(gameMatrix));
                     sumsRightDiag.ForeColor = Color.Red;
                 } else {
                     sumsRightDiag.ForeColor = Color.White;
@@ -874,8 +932,6 @@ namespace Assign5 {
             int columnCounter = 0;
 
             string[] fileStuff = fileName.Split('/');
-
-            Console.WriteLine(fileStuff[0]);
 
             if (!(new FileInfo("../../../Saves/" + fileStuff[0] + "/")).Exists) {
                 (new FileInfo("../../../Saves/" + fileStuff[0] + "/")).Directory.Create();
@@ -960,8 +1016,6 @@ namespace Assign5 {
 
                 row = rand.Next(0, numColumns);
                 col = rand.Next(0, numColumns);
-
-                Console.WriteLine("gameMatrix[" + row + ", " + col + "]");
 
                 // Find random cell and see if it is blank.
                 if (gameMatrix[row, col] == 0) {
