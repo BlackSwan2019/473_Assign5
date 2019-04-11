@@ -57,6 +57,8 @@ namespace Assign5 {
         int summationLeftDiagAnswer;
         int summationRightDiagAnswer;
 
+        PictureBox blind = new PictureBox();
+
         [DllImport("user32.dll")]
         static extern bool HideCaret(System.IntPtr hWnd);
 
@@ -77,6 +79,8 @@ namespace Assign5 {
 
             buttonSave.Enabled = true;
             buttonHelp.Enabled = true;
+            buttonHelp.Enabled = true;
+            buttonPause.Enabled = true;
             savedGame = false;
             richTextMessages.Clear();
 
@@ -257,6 +261,8 @@ namespace Assign5 {
 
                     labelTimer.Text = timerElapsed;
                 }
+
+
 
                 row = 0;
 
@@ -637,8 +643,13 @@ namespace Assign5 {
             labelTimer.Text = timerElapsed;
         }
 
-        private void buttonPause_Click(object sender, EventArgs e)
-        {
+        private void buttonPause_Click(object sender, EventArgs e) {
+            blind.Location = new Point(235, 0);
+            blind.Width = 500;
+            blind.Height = 500;
+            blind.BackColor = Color.Red;
+            blind.Paint += drawPauseMessage;
+
             if (gameIsGoing) {
                 gameIsGoing = false;
 
@@ -646,13 +657,36 @@ namespace Assign5 {
 
                 timer.Stop();
 
+                // Blank out playfield.
+                Controls.Add(blind);
+
+                blind.BringToFront();
+
             } else {
                 gameIsGoing = true;
 
                 buttonPause.Text = "Pause";
 
+                // Remove blind.
+                Controls.Remove(blind);
+
                 timer.Start();
             }
+        }
+
+        private void drawPauseMessage(object sender, PaintEventArgs e) {
+            // Create string to draw.
+            String drawString = "GAME PAUSED";
+
+            // Create font and brush.
+            Font drawFont = new Font("Arial", 16);
+            SolidBrush drawBrush = new SolidBrush(Color.White);
+
+            // Create point for upper-left corner of drawing.
+            float x = 170;
+            float y = 230.0F;
+
+            e.Graphics.DrawString(drawString, drawFont, drawBrush, x, y);
         }
 
         private void radioButtonEasy_CheckedChanged(object sender, EventArgs e) {
@@ -736,8 +770,24 @@ namespace Assign5 {
                 timer.Stop();
 
                 buttonHelp.Enabled = false;
+                buttonPause.Enabled = false;
+
+                foreach (TextBox textBox in textBoxes) {
+                    textBox.Enabled = false;
+                }
 
                 richTextMessages.Text = "You win! Your time was " + labelTimer.Text;
+
+                // Write out win time to file.
+                string[] fileStuff = fileName.Split('/');
+
+                if (!(new FileInfo("../../../Completed/" + fileStuff[0] + "/")).Exists) {
+                    (new FileInfo("../../../Completed/" + fileStuff[0] + "/")).Directory.Create();
+                }
+
+                using (StreamWriter saveFile = File.AppendText("../../../Completed/" + fileName)) {
+                    saveFile.WriteLine(labelTimer.Text);
+                }
             }
         }
 
