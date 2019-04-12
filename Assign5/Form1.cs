@@ -352,22 +352,24 @@ namespace Assign5 {
         *  Return:     void
         */
         private void drawGame() {
-            textBoxes = new GameCell[numColumns * numColumns];
+            textBoxes = new GameCell[numColumns * numColumns];  // A single game cell which player enters a value.
 
-            sumsX = new Label[numColumns];
-            sumsY = new Label[numColumns];
+            sumsX = new Label[numColumns];  // Column running-sum labels.
+            sumsY = new Label[numColumns];  // Row running-sum labels.
 
-            summationX = new int[numColumns];
-            summationY = new int[numColumns];
+            summationX = new int[numColumns];   // Data model for column sums.
+            summationY = new int[numColumns];   // Data model for row sums.
 
-            summationLeftDiag = 0;
-            summationRightDiag = 0;
+            summationLeftDiag = 0;      // Data model for left diagonal sum.
+            summationRightDiag = 0;     // Data model for right diagonal sum.
 
-            rowColTag rowCol;
+            rowColTag rowCol;           // Tag for text box containing row and column indices.
 
-            int x = 300;
+            // Location of textboxes.
+            int x = 300;    
             int y = 60;
 
+            // Game matrix indices.
             int row = 0;
             int col = 0;
 
@@ -402,6 +404,7 @@ namespace Assign5 {
                     textBoxes[i].Font = new Font(textBoxes[i].Font.FontFamily, 35);
                 }
 
+                // Set textBox properties.
                 textBoxes[i].Location = new Point(x, y);
                 textBoxes[i].SelectionStart = 0;
                 textBoxes[i].SelectionLength = textBoxes[i].Text.Length;
@@ -468,8 +471,8 @@ namespace Assign5 {
                     }
                 }
 
+                // Set column running-sum label properties.
                 sumsX[i].Text = summationX[i].ToString();
-
                 sumsX[i].ForeColor = Color.White;
                 sumsX[i].Height = 30;
                 sumsX[i].Width = 30;
@@ -499,8 +502,8 @@ namespace Assign5 {
                     }
                 }
 
+                // Set row running-sum labels.
                 sumsY[i].Text = summationY[i].ToString();
-
                 sumsY[i].ForeColor = Color.White;
                 sumsY[i].Height = 30;
                 sumsY[i].Width = 30;
@@ -528,8 +531,8 @@ namespace Assign5 {
                 }
             }
 
+            // Set properties of left diagonal running-sum label. 
             sumsLeftDiag.Text = summationLeftDiag.ToString();
-            
             sumsLeftDiag.ForeColor = Color.White;
             sumsLeftDiag.Height = 30;
             sumsLeftDiag.Width = 30;
@@ -541,7 +544,6 @@ namespace Assign5 {
 
             // Place right diagonal sum label.
             sumsRightDiag = new Label();
-
             int rightDiagX = 680;
             int rightDiagY = 28;
 
@@ -550,8 +552,8 @@ namespace Assign5 {
                 summationRightDiag += gameMatrix[r, c];
             }
 
+            // Set properties of right diagonal running-sum label.
             sumsRightDiag.Text = summationRightDiag.ToString();
-
             sumsRightDiag.ForeColor = Color.White;
             sumsRightDiag.Height = 30;
             sumsRightDiag.Width = 30;
@@ -565,8 +567,10 @@ namespace Assign5 {
                 setLabelColors();
             }
 
+            // Place solution labels on the game field.
             drawSolutionLabels();
 
+            // Start timing.
             beginTimer();
         }
 
@@ -580,9 +584,9 @@ namespace Assign5 {
         *  Return:     void
         */
         private void drawSolutionLabels() {
+            // Answer labels for rows and columns.
             sumsXAnswer = new Label[numColumns];
             sumsYAnswer = new Label[numColumns];
-            //sumsLeftDiag = new Label();
 
             // Beginning coordinates of first top label.
             int topXAnswer = 295 + (textBoxes[0].Width / 2) - 10;
@@ -628,8 +632,8 @@ namespace Assign5 {
             // Draw sum labels across the top of the play field.
             sumsLeftDiagAnswer = new Label();
 
+            // Set properties of left diagonal solution label.
             sumsLeftDiagAnswer.Text = "(" + summationLeftDiagAnswer.ToString() + ")";
-
             sumsLeftDiagAnswer.ForeColor = Color.White;
             sumsLeftDiagAnswer.Height = 35;
             sumsLeftDiagAnswer.Width = 40;
@@ -689,6 +693,7 @@ namespace Assign5 {
             //System.Timers.Timer timer = (System.Timers.Timer)source;
             seconds += 1;
 
+            // Do math to get correct timestap of HH:MM:SS from an amount of seconds.
             if (seconds == 60) {
                 minutes++;
                 seconds = 0;
@@ -699,8 +704,8 @@ namespace Assign5 {
                 minutes = 0;
             }
 
+            // Set timer label text.
             string timerElapsed = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
-
             labelTimer.Text = timerElapsed;
         }
 
@@ -715,12 +720,14 @@ namespace Assign5 {
         *  Return:     void
         */
         private void buttonPause_Click(object sender, EventArgs e) {
+            // Set pause blinder properties.
             blind.Location = new Point(240, 0);
             blind.Width = 595;
             blind.Height = 500;
             blind.BackColor = Color.Red;
             blind.Paint += drawPauseMessage;
 
+            // If game is going, then pause timer and cover playfield.
             if (gameIsGoing) {
                 gameIsGoing = false;
 
@@ -732,8 +739,7 @@ namespace Assign5 {
                 Controls.Add(blind);
 
                 blind.BringToFront();
-
-            } else {
+            } else { // Else, remove blinder and resume timer.
                 gameIsGoing = true;
 
                 buttonPause.Text = "Pause";
@@ -781,9 +787,11 @@ namespace Assign5 {
         *  Return:     void
         */
         private void radioButtonEasy_CheckedChanged(object sender, EventArgs e) {
+            // Reset comboBox and enable it.
             difficultyOptions.Clear();
             comboBoxGame.Enabled = true;
 
+            // Place options into comboBox.
             difficultyOptions.Add("easy/e1.txt", "Easy 1");
             difficultyOptions.Add("easy/e2.txt", "Easy 2");
             difficultyOptions.Add("easy/e3.txt", "Easy 3");
@@ -805,9 +813,11 @@ namespace Assign5 {
         *  Return:     void
         */
         private void radioButtonMedium_CheckedChanged(object sender, EventArgs e) {
+            // Reset comboBox and enable it.
             difficultyOptions.Clear();
             comboBoxGame.Enabled = true;
             
+            // Populate comboBox.
             difficultyOptions.Add("medium/m1.txt", "Medium 1");
             difficultyOptions.Add("medium/m2.txt", "Medium 2");
             difficultyOptions.Add("medium/m3.txt", "Medium 3");
@@ -829,9 +839,11 @@ namespace Assign5 {
         *  Return:     void
         */
         private void radioButtonHard_CheckedChanged(object sender, EventArgs e) {
+            // Reset comboBox and enable it.
             difficultyOptions.Clear();
             comboBoxGame.Enabled = true;
             
+            // Populate comboBox with options.
             difficultyOptions.Add("hard/h1.txt", "Hard 1");
             difficultyOptions.Add("hard/h2.txt", "Hard 2");
             difficultyOptions.Add("hard/h3.txt", "Hard 3");
@@ -854,9 +866,11 @@ namespace Assign5 {
         *  Return:     void
         */
         void valueChanged(object sender, EventArgs e) {
+            // Convert sent-in object to GameCell.
             GameCell cell = (GameCell)sender;
             rowColTag rowCol = (rowColTag)cell.Tag;
 
+            // Tokenize textBox content.
             char[] textBoxChars = (cell.Text).ToCharArray();
 
             // If cell is blank, then set its value to 0, else update gameMatrix with cell's new value.
@@ -869,6 +883,7 @@ namespace Assign5 {
 
             setLabelColors();
 
+            // If game is finished, then set varous UI element states.
             if (gameComplete()) {
                 timer.Stop();
 
@@ -881,16 +896,19 @@ namespace Assign5 {
 
                 richTextMessages.Clear();
 
+                // Display Win message.
                 richTextMessages.AppendText("You win! \nDifficulty Times: \n");
                 richTextMessages.AppendText("This game:  " + labelTimer.Text);
 
                 // Write out win time to file.
                 string[] fileStuff = fileName.Split('/');
 
+                // If file doesn't exit, make it!
                 if (!(new FileInfo("../../../Completed/" + fileStuff[0] + "/")).Exists) {
                     (new FileInfo("../../../Completed/" + fileStuff[0] + "/")).Directory.Create();
                 }
 
+                // Write out time to file.
                 using (StreamWriter saveFile = File.AppendText("../../../Completed/" + fileStuff[0] + "/times.txt")) {
                     saveFile.WriteLine(labelTimer.Text);
                 }
@@ -923,7 +941,7 @@ namespace Assign5 {
                         // Loop through list of time strings and parse them.
                         foreach (string timestamp in completionTimes)
                         {
-                            Console.WriteLine(timestamp);
+                            // Get timestamps and do math on them to get average and fastest times.
                             hms = timestamp.Split(':');
 
                             avgHour = Convert.ToInt32(hms[0]);
@@ -944,11 +962,13 @@ namespace Assign5 {
                                 fastestTotalSeconds = fastestSecondsSoFar;
                             }
 
+                            // Reset time to check for next one.
                             fastestSecondsSoFar = 0;
                         }
                     }
                 }
 
+                // Convert seconds count to a timestamp.
                 averageSeconds = totalSeconds / completionTimes.Count();
 
                 int fastestHours = fastestTotalSeconds / 3600;
@@ -963,6 +983,7 @@ namespace Assign5 {
                 fastestTotalSeconds -= fastestMinutes * 60;
                 averageSeconds -= averageMinutes * 60;
 
+                // Display time information in message box.
                 fastestTimestamp = string.Format("{0:00}:{1:00}:{2:00}", fastestHours, fastestMinutes, fastestTotalSeconds);
                 string fastestTimestampOutput = string.Format("{0, 10}", fastestTimestamp);
 
@@ -1167,10 +1188,12 @@ namespace Assign5 {
 
             string[] fileStuff = fileName.Split('/');
 
+            // If save file doesn't exist, make it.
             if (!(new FileInfo("../../../Saves/" + fileStuff[0] + "/")).Exists) {
                 (new FileInfo("../../../Saves/" + fileStuff[0] + "/")).Directory.Create();
             }
             
+            // Write out save data.
             using (StreamWriter saveFile = new StreamWriter("../../../Saves/" + fileName)) {
                 foreach (int value in initialMatrix){
                     if (columnCounter == numColumns) {
@@ -1178,6 +1201,7 @@ namespace Assign5 {
                         columnCounter = 0;
                     }
 
+                    // Write file.
                     saveFile.Write(value);
 
                     columnCounter++;
@@ -1187,6 +1211,7 @@ namespace Assign5 {
 
                 columnCounter = 0;
 
+                // Save game data to file.
                 foreach (int value in gameMatrix) {
                     if (columnCounter == numColumns) {
                         saveFile.Write("\n");
@@ -1202,6 +1227,7 @@ namespace Assign5 {
 
                 columnCounter = 0;
 
+                // Save solution data to file.
                 foreach (int value in solutionMatrix) {
                     if (columnCounter == numColumns) {
                         saveFile.Write("\n");
@@ -1228,6 +1254,10 @@ namespace Assign5 {
         *  Return:     bool
         */
         private bool gameComplete() {
+            /*
+             *  If all labels are green, game is done!
+             * 
+             */
             foreach (Label l in sumsX) {
                 if (l.ForeColor != Color.FromArgb(51, 204, 51)) {
                     return false;  
@@ -1258,15 +1288,16 @@ namespace Assign5 {
         *  Return:     void
         */
         private void buttonHelp_Click(object sender, EventArgs e) {
-            bool foundUnfilledCell = false;
-            Random rand;
+            bool foundUnfilledCell = false; // Whether a cell has been filled.
+            Random rand;    // Random number for selecting game cell to fill.
 
             int row, col;
             int textBoxIndex;
 
             while (!foundUnfilledCell) {
-                rand = new Random();
+                rand = new Random(); // Random number generator.
 
+                // Choose random row and column.
                 row = rand.Next(0, numColumns);
                 col = rand.Next(0, numColumns);
 
@@ -1295,6 +1326,7 @@ namespace Assign5 {
     * 
     */
     public class GameCell : TextBox {
+        // Import OS library for hiding caret in textboxes.
         [DllImport("user32.dll")]
         static extern bool HideCaret(IntPtr hWnd);
 
@@ -1366,8 +1398,8 @@ namespace Assign5 {
         *  Return:     void
         */
     public class rowColTag {
-        public int row;
-        public int col;
+        public int row; // Matrix row.
+        public int col; // Matrix column.
 
         public rowColTag(int newRow, int newCol) {
             row = newRow;
