@@ -260,20 +260,7 @@ namespace Assign5 {
                     labelTimer.Text = timerElapsed;
                 }
 
-                // If there are completed games for this play field, load the list of times for it.
-                if ((new FileInfo("../../../Completed/" + fileName)).Exists) {
-                    pathToGame = "../../../Completed/" + fileName;
-
-                    using (var completionTimesFile = new StreamReader(pathToGame)) {
-                        while ((completionTime = completionTimesFile.ReadLine()) != null) {
-                            completionTimes.Add(completionTime);
-                        }
-
-                        foreach (string s in completionTimes) {
-                            Console.WriteLine(s);
-                        }
-                    }
-                }
+                
 
                 row = 0;
 
@@ -782,7 +769,7 @@ namespace Assign5 {
                     textBox.Enabled = false;
                 }
 
-                richTextMessages.Text = "You win! Your time was " + labelTimer.Text;
+                richTextMessages.AppendText("You win! \nYour time was " + labelTimer.Text);
 
                 // Write out win time to file.
                 string[] fileStuff = fileName.Split('/');
@@ -791,9 +778,65 @@ namespace Assign5 {
                     (new FileInfo("../../../Completed/" + fileStuff[0] + "/")).Directory.Create();
                 }
 
-                using (StreamWriter saveFile = File.AppendText("../../../Completed/" + fileName)) {
+                using (StreamWriter saveFile = File.AppendText("../../../Completed/" + fileStuff[0] + "/times.txt")) {
                     saveFile.WriteLine(labelTimer.Text);
                 }
+
+                // Get average time here.
+                string[] filePathTokens = fileName.Split('/');
+                string[] hms;
+                int h, m, s, totalSeconds = 0;    // hours, minutes, seconds
+                int averageSeconds = 0;
+                string averageTimeStamp;
+
+
+                // If there are completed games for this play field, load the list of times for it.
+                if ((new FileInfo("../../../Completed/" + filePathTokens[0] + "/times.txt")).Exists)
+                {
+                    pathToGame = "../../../Completed/" + filePathTokens[0] + "/times.txt";
+
+                    using (var completionTimesFile = new StreamReader(pathToGame))
+                    {
+                        while ((completionTime = completionTimesFile.ReadLine()) != null)
+                        {
+                            // Add timestamp to list of string timestamps.
+                            completionTimes.Add(completionTime);
+                        }
+
+                        // Loop through list of time strings and parse them.
+                        foreach (string timestamp in completionTimes)
+                        {
+                            Console.WriteLine(timestamp);
+                            hms = timestamp.Split(':');
+
+                            h = Convert.ToInt32(hms[0]);
+                            m = Convert.ToInt32(hms[1]);
+                            s = Convert.ToInt32(hms[2]);
+
+                            totalSeconds += s;
+                            totalSeconds += m * 60;
+                            totalSeconds += h * 3600;
+                        }
+                    }
+                }
+
+                averageSeconds = totalSeconds / completionTimes.Count();
+
+                Console.WriteLine("Total Seconds Average: " + averageSeconds);
+
+                int averageHours = averageSeconds / 3600;
+
+                averageSeconds -= averageHours * 3600;
+
+                int averageMinutes = averageSeconds / 60;
+
+                averageSeconds -= averageMinutes * 60;
+
+                averageTimeStamp = string.Format("{0:00}:{1:00}:{2:00}", averageHours, averageMinutes, averageSeconds);
+
+                Console.WriteLine(averageTimeStamp);
+
+                richTextMessages.AppendText("\nAverage time: " + averageTimeStamp);
             }
         }
 
@@ -1044,10 +1087,6 @@ namespace Assign5 {
             this.GotFocus += textBox_Selected;
             this.Leave += textBox_Deselected;
             this.KeyPress += textBox_KeyPress;
-        }
-
-        private void TextBoxGotFocus(object sender, EventArgs args) {
-            HideCaret(this.Handle);
         }
 
         void textBox_Selected(object sender, EventArgs e) {
