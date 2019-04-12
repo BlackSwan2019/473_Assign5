@@ -3,7 +3,7 @@
  * Author:      Patrick Klesyk, Ben Lane, Matt Rycraft
  * Z-ID:        Z1782152        Z1806979  Z1818053 
  * Description: A small logic game that mimics Soduku.
- * Due Date:    4/10/2019
+ * Due Date:    4/11/2019
  */
 
 using System;
@@ -85,6 +85,8 @@ namespace Assign5 {
             buttonPause.Enabled = true;
             savedGame = false;
             richTextMessages.Clear();
+            FontFamily fontFamily = new FontFamily("Courier New");
+            richTextMessages.Font = new Font(fontFamily, 11);
 
             // If there are textBoxes from last session, remove them.
             if (textBoxes != null) {
@@ -641,8 +643,8 @@ namespace Assign5 {
         }
 
         private void buttonPause_Click(object sender, EventArgs e) {
-            blind.Location = new Point(235, 0);
-            blind.Width = 500;
+            blind.Location = new Point(240, 0);
+            blind.Width = 595;
             blind.Height = 500;
             blind.BackColor = Color.Red;
             blind.Paint += drawPauseMessage;
@@ -769,7 +771,10 @@ namespace Assign5 {
                     textBox.Enabled = false;
                 }
 
-                richTextMessages.AppendText("You win! \nYour time was " + labelTimer.Text);
+                richTextMessages.Clear();
+
+                richTextMessages.AppendText("You win! \nDifficulty Times: \n");
+                richTextMessages.AppendText("This game:  " + labelTimer.Text);
 
                 // Write out win time to file.
                 string[] fileStuff = fileName.Split('/');
@@ -785,10 +790,14 @@ namespace Assign5 {
                 // Get average time here.
                 string[] filePathTokens = fileName.Split('/');
                 string[] hms;
-                int h, m, s, totalSeconds = 0;    // hours, minutes, seconds
-                int averageSeconds = 0;
-                string averageTimeStamp;
+                int avgHour, avgMinute, avgSecond, totalSeconds = 0; // hours, minutes, seconds
+                int fastestTotalSeconds = 0, fastestSecondsSoFar = 0;    
 
+                int averageSeconds = 0;
+                int fastestSeconds = 1000000000;
+
+                string averageTimeStamp;
+                string fastestTimestamp;
 
                 // If there are completed games for this play field, load the list of times for it.
                 if ((new FileInfo("../../../Completed/" + filePathTokens[0] + "/times.txt")).Exists)
@@ -809,34 +818,51 @@ namespace Assign5 {
                             Console.WriteLine(timestamp);
                             hms = timestamp.Split(':');
 
-                            h = Convert.ToInt32(hms[0]);
-                            m = Convert.ToInt32(hms[1]);
-                            s = Convert.ToInt32(hms[2]);
+                            avgHour = Convert.ToInt32(hms[0]);
+                            avgMinute = Convert.ToInt32(hms[1]);
+                            avgSecond = Convert.ToInt32(hms[2]);
 
-                            totalSeconds += s;
-                            totalSeconds += m * 60;
-                            totalSeconds += h * 3600;
+                            fastestSecondsSoFar += avgSecond;
+                            fastestSecondsSoFar += avgMinute * 60;
+                            fastestSecondsSoFar += avgHour * 3600;
+
+                            totalSeconds += avgSecond;
+                            totalSeconds += avgMinute * 60;
+                            totalSeconds += avgHour * 3600;
+                            
+                            // Get fastest time total seconds.
+                            if (fastestSecondsSoFar < fastestSeconds) {
+                                fastestSeconds = fastestSecondsSoFar;
+                                fastestTotalSeconds = fastestSecondsSoFar;
+                            }
+
+                            fastestSecondsSoFar = 0;
                         }
                     }
                 }
 
                 averageSeconds = totalSeconds / completionTimes.Count();
 
-                Console.WriteLine("Total Seconds Average: " + averageSeconds);
-
+                int fastestHours = fastestTotalSeconds / 3600;
                 int averageHours = averageSeconds / 3600;
 
+                fastestTotalSeconds -= fastestHours * 3600;
                 averageSeconds -= averageHours * 3600;
 
+                int fastestMinutes = fastestTotalSeconds / 60;
                 int averageMinutes = averageSeconds / 60;
 
+                fastestTotalSeconds -= fastestMinutes * 60;
                 averageSeconds -= averageMinutes * 60;
 
+                fastestTimestamp = string.Format("{0:00}:{1:00}:{2:00}", fastestHours, fastestMinutes, fastestTotalSeconds);
+                string fastestTimestampOutput = string.Format("{0, 10}", fastestTimestamp);
+
                 averageTimeStamp = string.Format("{0:00}:{1:00}:{2:00}", averageHours, averageMinutes, averageSeconds);
-
-                Console.WriteLine(averageTimeStamp);
-
-                richTextMessages.AppendText("\nAverage time: " + averageTimeStamp);
+                string averageTimeStampOutput = string.Format("{0, 10}", averageTimeStamp);
+                
+                richTextMessages.AppendText("\nFastest:  " + fastestTimestampOutput);
+                richTextMessages.AppendText("\nAverage:  " + averageTimeStampOutput);
             }
         }
 
