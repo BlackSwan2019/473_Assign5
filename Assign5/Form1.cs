@@ -22,45 +22,46 @@ using System.Runtime.InteropServices;
 
 namespace Assign5 {
     public partial class Form1 : Form {
-        string gameData;
-        int numColumns;
+        string gameData;    // A singe line of data from file.
+        int numColumns;     // Number of columns in the field (same as rows).
         Dictionary<string, string> difficultyOptions = new Dictionary<string, string>();    // Holds game difficulty options for Difficulty dropdown menu.
-        string fileName;
-        string pathToGame;
-        string completionTime;
-        List<string> completionTimes = new List<string>();
+        string fileName;        // Name of game file.
+        string pathToGame;      // Directory path to gameFile.
+        string completionTime;  // Time player took to complete a game.
+        List<string> completionTimes = new List<string>();  // A list of times for completed games.
 
-        System.Timers.Timer timer = new System.Timers.Timer(1000);
-        bool gameIsGoing = false;
-        static int hours = 0;
-        static int minutes = 0;
-        static int seconds = 0;
+        System.Timers.Timer timer = new System.Timers.Timer(1000);  // Keeps track of game elapsed time.
+        bool gameIsGoing = false;       // Whether game is in progress.
+        static int hours = 0;           // Elapsed hours.
+        static int minutes = 0;         // Elapsed minutes.
+        static int seconds = 0;         // Elapsed seconds.
 
-        bool savedGame = false;
+        bool savedGame = false;         // Whether game being played is from a save file.
 
-        GameCell[] textBoxes;
+        GameCell[] textBoxes;           // Game cells.
 
-        Label[] sumsX;
-        Label[] sumsY;
-        Label sumsLeftDiag;
-        Label sumsRightDiag;
+        Label[] sumsX;                  // Column sums.
+        Label[] sumsY;                  // Row sums.
+        Label sumsLeftDiag;             // Left diagonal sum.
+        Label sumsRightDiag;            // Right diagonal sum.
 
-        Label[] sumsXAnswer;
-        Label[] sumsYAnswer;
-        Label sumsLeftDiagAnswer;
-        Label sumsRightDiagAnswer;
+        Label[] sumsXAnswer;            // Solution sum for columns.
+        Label[] sumsYAnswer;            // Solution sum for rows.
+        Label sumsLeftDiagAnswer;       // Solution sum for left diagonal.
+        Label sumsRightDiagAnswer;      // Solution sum for right diagonal.
 
-        int[] summationX;
-        int[] summationY;
-        int summationLeftDiag;
-        int summationRightDiag;
-        int[] summationXAnswer;
-        int[] summationYAnswer;
-        int summationLeftDiagAnswer;
-        int summationRightDiagAnswer;
+        int[] summationX;               // Column sums
+        int[] summationY;               // Row sums
+        int summationLeftDiag;          // Left diagonal sums.
+        int summationRightDiag;         // Right diagonal sums.
+        int[] summationXAnswer;         // Solution sum for columns.
+        int[] summationYAnswer;         // Solution sum for rows.
+        int summationLeftDiagAnswer;    // Solution sum for left diagonal.    
+        int summationRightDiagAnswer;   // Solution sum for right diagonal.
 
-        PictureBox blind = new PictureBox();
+        PictureBox blind = new PictureBox();    // Covers game when game is paused.
 
+        // Import OS library for hiding caret in textboxes.
         [DllImport("user32.dll")]
         static extern bool HideCaret(System.IntPtr hWnd);
 
@@ -76,14 +77,27 @@ namespace Assign5 {
             radioButtonEasy.Checked = true;
         }
 
+        /*  
+        *  Method:     button1_Start
+        *  
+        *  Purpose:    Handles when user clicks the start button. Initializes data models. 
+        * 
+        *  Arguments:  object          UI component sending event.
+        *              EventArgs       The event.
+        *              
+        *  Return:     void
+        */
         private void button1_Start(object sender, EventArgs e) {
-            int row = 0;
+            int row = 0;    // Roow of matrix.
 
+            // Enable various buttons upon start.
             buttonSave.Enabled = true;
             buttonHelp.Enabled = true;
             buttonHelp.Enabled = true;
             buttonPause.Enabled = true;
             savedGame = false;
+
+            // Clear and set message box.
             richTextMessages.Clear();
             FontFamily fontFamily = new FontFamily("Courier New");
             richTextMessages.Font = new Font(fontFamily, 11);
@@ -109,6 +123,7 @@ namespace Assign5 {
                 }
             }
 
+            // Get file name according to combobox selection.
             fileName = ((KeyValuePair<string, string>)comboBoxGame.SelectedItem).Key;
             
             // If there is a saved game for this difficulty and field, then use that one.
@@ -245,6 +260,7 @@ namespace Assign5 {
                         break;
                 }
 
+                // Read in time elapsed for saved game.
                 while ((gameData = gameFile.ReadLine()) != null) {
                     if (gameData.Length == 0) {
                         continue;
@@ -257,8 +273,8 @@ namespace Assign5 {
                     minutes = Convert.ToInt32(timestamp[1]);
                     seconds = Convert.ToInt32(timestamp[2]);
 
+                    // Set timer label to elapsed value.
                     string timerElapsed = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
-
                     labelTimer.Text = timerElapsed;
                 }
 
@@ -271,6 +287,15 @@ namespace Assign5 {
             }
         }
 
+        /*  
+        *  Method:     getAnswers
+        *  
+        *  Purpose:    Get solution sums for all axes' data models. 
+        * 
+        *  Arguments:  none
+        *              
+        *  Return:     void
+        */
         private void getAnswers() {
             summationXAnswer = new int[numColumns];
             summationYAnswer = new int[numColumns];
@@ -317,6 +342,15 @@ namespace Assign5 {
             }
         }
 
+        /*  
+        *  Method:     drawGame
+        *  
+        *  Purpose:    Draws game field. 
+        * 
+        *  Arguments:  none
+        *              
+        *  Return:     void
+        */
         private void drawGame() {
             textBoxes = new GameCell[numColumns * numColumns];
 
@@ -536,6 +570,15 @@ namespace Assign5 {
             beginTimer();
         }
 
+        /*  
+        *  Method:     drawSolutionLabels
+        *  
+        *  Purpose:    Draws correct-solution labels for columsn, rows, and diagonals. 
+        * 
+        *  Arguments:  none
+        *              
+        *  Return:     void
+        */
         private void drawSolutionLabels() {
             sumsXAnswer = new Label[numColumns];
             sumsYAnswer = new Label[numColumns];
@@ -614,6 +657,15 @@ namespace Assign5 {
 
         }
 
+        /*  
+        *  Method:     beginTimer
+        *  
+        *  Purpose:    Starts the time-elapsed timer. 
+        * 
+        *  Arguments:  none
+        *              
+        *  Return:     void
+        */
         private void beginTimer() {
             gameIsGoing = true;
 
@@ -623,6 +675,16 @@ namespace Assign5 {
             timer.Start();
         }
 
+        /*  
+        *  Method:     MyTimedEvent
+        *  
+        *  Purpose:    Engages for every tick of the timer.
+        * 
+        *  Arguments:  object          UI component sending event.
+        *              EventArgs       The event.
+        *              
+        *  Return:     void
+        */
         private void MyTimedEvent(object source, ElapsedEventArgs args) {
             //System.Timers.Timer timer = (System.Timers.Timer)source;
             seconds += 1;
@@ -642,6 +704,16 @@ namespace Assign5 {
             labelTimer.Text = timerElapsed;
         }
 
+        /*  
+        *  Method:     buttonPause_Click
+        *  
+        *  Purpose:    Handles when user clicks the pause button. 
+        * 
+        *  Arguments:  object          UI component sending event.
+        *              EventArgs       The event.
+        *              
+        *  Return:     void
+        */
         private void buttonPause_Click(object sender, EventArgs e) {
             blind.Location = new Point(240, 0);
             blind.Width = 595;
@@ -673,6 +745,16 @@ namespace Assign5 {
             }
         }
 
+        /*  
+        *  Method:     drawPauseMessage
+        *  
+        *  Purpose:    Draw the graphic over the playfield to obscure it when player pauses game. 
+        * 
+        *  Arguments:  object               UI component sending event.
+        *              PaintEventArgs       The event.
+        *              
+        *  Return:     void
+        */
         private void drawPauseMessage(object sender, PaintEventArgs e) {
             // Create string to draw.
             String drawString = "GAME PAUSED";
@@ -688,6 +770,16 @@ namespace Assign5 {
             e.Graphics.DrawString(drawString, drawFont, drawBrush, x, y);
         }
 
+        /*  
+        *  Method:     radioButtonEasy_CheckedChanged
+        *  
+        *  Purpose:    Check if easy difficulty was selected. 
+        * 
+        *  Arguments:  object          UI component sending event.
+        *              EventArgs       The event.
+        *              
+        *  Return:     void
+        */
         private void radioButtonEasy_CheckedChanged(object sender, EventArgs e) {
             difficultyOptions.Clear();
             comboBoxGame.Enabled = true;
@@ -702,6 +794,16 @@ namespace Assign5 {
             comboBoxGame.ValueMember = "Key";
         }
 
+        /*  
+        *  Method:     radioButtonMedium_CheckedChanged
+        *  
+        *  Purpose:    Checks whether medium difficulty was selected.
+        * 
+        *  Arguments:  object          UI component sending event.
+        *              EventArgs       The event.
+        *              
+        *  Return:     void
+        */
         private void radioButtonMedium_CheckedChanged(object sender, EventArgs e) {
             difficultyOptions.Clear();
             comboBoxGame.Enabled = true;
@@ -716,6 +818,16 @@ namespace Assign5 {
             comboBoxGame.ValueMember = "Key";
         }
 
+        /*  
+        *  Method:     radioButtonHard_CheckedChanged
+        *  
+        *  Purpose:    Hard difficulty radio button handler. 
+        * 
+        *  Arguments:  object          UI component sending event.
+        *              EventArgs       The event.
+        *              
+        *  Return:     void
+        */
         private void radioButtonHard_CheckedChanged(object sender, EventArgs e) {
             difficultyOptions.Clear();
             comboBoxGame.Enabled = true;
@@ -728,10 +840,6 @@ namespace Assign5 {
             comboBoxGame.DataSource = new BindingSource(difficultyOptions, null);
             comboBoxGame.DisplayMember = "Value";
             comboBoxGame.ValueMember = "Key";
-        }
-
-        public void HideCaret(TextBox textbox) {
-            HideCaret(textbox.Handle);
         }
 
         /*  
@@ -866,6 +974,15 @@ namespace Assign5 {
             }
         }
 
+        /*  
+        *  Method:     setLabelColors
+        *  
+        *  Purpose:    Changes sum labels to different colors according to state of game vs solution.
+        * 
+        *  Arguments:  none
+        *              
+        *  Return:     void
+        */
         private void setLabelColors() {
             for (int i = 0; i < numColumns; i++) {
                 // Reset the label value.
@@ -951,6 +1068,16 @@ namespace Assign5 {
             }
         }
 
+        /*  
+        *  Method:     rowFilled
+        *  
+        *  Purpose:    Checks if a row has been filled.
+        * 
+        *  Arguments:  int[,]       Game matrix.
+        *              int          matrix row.
+        *              
+        *  Return:     bool
+        */
         private bool rowFilled(int[,] matrix, int row) {
             // If there are any unfilled cells in the row, return false.
             for (int c = 0; c < numColumns; c++) {
@@ -962,6 +1089,16 @@ namespace Assign5 {
             return true;
         }
 
+        /*  
+        *  Method:     columnFilled
+        *  
+        *  Purpose:    Checks if a column has been filled.
+        * 
+        *  Arguments:  int[,]       Game matrix.
+        *              int          matrix column.
+        *              
+        *  Return:     bool
+        */
         private bool columnFilled(int[,] matrix, int column) {
             // If there are any unfilled cells in the row, return false.
             for (int r = 0; r < numColumns; r++) {
@@ -973,6 +1110,15 @@ namespace Assign5 {
             return true;
         }
 
+        /*  
+        *  Method:     leftDiagFilled
+        *  
+        *  Purpose:    Checks if left diagonal has been filled.
+        * 
+        *  Arguments:  int[,]       Game matrix.
+        *              
+        *  Return:     bool
+        */
         private bool leftDiagFilled(int[,] matrix) {
             // If there are any unfilled cells in the row, return false.
             for (int r = 0; r < numColumns; r++) {
@@ -986,6 +1132,15 @@ namespace Assign5 {
             return true;
         }
 
+        /*  
+        *  Method:     rightDiagFilled
+        *  
+        *  Purpose:    Checks if right diagonal has been filled.
+        * 
+        *  Arguments:  int[,]       Game matrix.
+        *              
+        *  Return:     bool
+        */
         private bool rightDiagFilled(int[,] matrix) {
             // If there are any unfilled cells in the row, return false.
             for (int r = 0, c = numColumns - 1; r < numColumns && c >= 0; r++, c--) {
@@ -997,6 +1152,16 @@ namespace Assign5 {
             return true;
         }
 
+        /*  
+        *  Method:     buttonSave_Click
+        *  
+        *  Purpose:    Handles when user clicks to save a game.
+        * 
+        *  Arguments:  object          UI component sending event.
+        *              EventArgs       The event.
+        *              
+        *  Return:     void
+        */
         private void buttonSave_Click(object sender, EventArgs e) {
             int columnCounter = 0;
 
@@ -1053,6 +1218,15 @@ namespace Assign5 {
             }
         }
 
+        /*  
+        *  Method:     gameComplete
+        *  
+        *  Purpose:    Checks to see if player completed game.
+        * 
+        *  Arguments:  none
+        *              
+        *  Return:     bool
+        */
         private bool gameComplete() {
             foreach (Label l in sumsX) {
                 if (l.ForeColor != Color.FromArgb(51, 204, 51)) {
@@ -1073,6 +1247,16 @@ namespace Assign5 {
             return true;
         }
 
+        /*  
+        *  Method:     buttonHelp_Click
+        *  
+        *  Purpose:    Helps player by placing a correct value in an empty box.
+        * 
+        *  Arguments:  object          UI component sending event.
+        *              EventArgs       The event.
+        *              
+        *  Return:     void
+        */
         private void buttonHelp_Click(object sender, EventArgs e) {
             bool foundUnfilledCell = false;
             Random rand;
@@ -1104,6 +1288,12 @@ namespace Assign5 {
         }
     }
 
+   /*  
+    *  Class:      GameCell
+    *  
+    *  Purpose:    A cell in the game. Player enters a value into it.
+    * 
+    */
     public class GameCell : TextBox {
         [DllImport("user32.dll")]
         static extern bool HideCaret(IntPtr hWnd);
@@ -1115,6 +1305,16 @@ namespace Assign5 {
             this.KeyPress += textBox_KeyPress;
         }
 
+        /*  
+        *  Method:     textBox_Selected
+        *  
+        *  Purpose:    Handles when text box is selected.
+        * 
+        *  Arguments:  object          UI component sending event.
+        *              EventArgs       The event.
+        *              
+        *  Return:     void
+        */
         void textBox_Selected(object sender, EventArgs e) {
             Control control = sender as Control;
             control.BackColor = Color.FromArgb(120, 200, 255);
@@ -1122,6 +1322,16 @@ namespace Assign5 {
             HideCaret(this.Handle);
         }
 
+        /*  
+        *  Method:     textBox_Deselected
+        *  
+        *  Purpose:    Handles when user leaves a textbox.
+        * 
+        *  Arguments:  object          UI component sending event.
+        *              EventArgs       The event.
+        *              
+        *  Return:     void
+        */
         void textBox_Deselected(object sender, EventArgs e) {
             Control control = sender as Control;
 
@@ -1129,6 +1339,16 @@ namespace Assign5 {
             control.BackColor = Color.FromArgb(255, 255, 255);
         }
 
+        /*  
+        *  Method:     textBox_KeyPress
+        *  
+        *  Purpose:    Handles when a user types into a textbox.
+        * 
+        *  Arguments:  object               UI component sending event.
+        *              KeyPressEventArgs    The event.
+        *              
+        *  Return:     void
+        */
         private void textBox_KeyPress(object sender, KeyPressEventArgs e) {
             // Allow textBox to only accept numbers 1-9.
             if (!(((Char.IsDigit(e.KeyChar) || (e.KeyChar == (char)Keys.Back)) && (e.KeyChar != '0')))) {
@@ -1138,6 +1358,13 @@ namespace Assign5 {
         }     
     }
 
+    /*  
+        *  Class:      rowColTag
+        *  
+        *  Purpose:    Contains some data for a textbox (the row and column mapping to the game matrix).
+        * 
+        *  Return:     void
+        */
     public class rowColTag {
         public int row;
         public int col;
